@@ -308,6 +308,30 @@
         </svg>
       </a>
 
+      <!-- Desktop Navigation Menu (Directly visible in preview and larger viewports) -->
+      <nav class="hidden lg:flex items-center gap-8 text-xs font-mono uppercase tracking-widest text-slate-300">
+        <a href="#works" class="hover:text-coral transition-colors flex items-center gap-1.5 py-1">
+          <span class="text-coral">02</span>
+          <span>Works</span>
+        </a>
+        <a href="#about" class="hover:text-coral transition-colors flex items-center gap-1.5 py-1">
+          <span class="text-coral">03</span>
+          <span>About</span>
+        </a>
+        <a href="#experience" class="hover:text-coral transition-colors flex items-center gap-1.5 py-1">
+          <span class="text-coral">04</span>
+          <span>Experience</span>
+        </a>
+        <a href="#honors" class="hover:text-coral transition-colors flex items-center gap-1.5 py-1">
+          <span class="text-coral">05</span>
+          <span>Honors</span>
+        </a>
+        <a href="#contact" class="hover:text-coral transition-colors flex items-center gap-1.5 py-1">
+          <span class="text-coral">06</span>
+          <span>Contact</span>
+        </a>
+      </nav>
+
       <!-- Direct Email & Soundscape Toggle in Top Bar -->
       <div class="flex items-center gap-3 md:gap-5">
         <a href="mailto:kushmitha259@gmail.com" class="hidden md:block text-xs md:text-sm text-slate-300 hover:text-white transition-colors font-sans tracking-wide">
@@ -516,16 +540,15 @@
 
           <!-- Coral Button & Picture Controls (Switch Photo + Background Transparency Toggle) -->
           <div class="flex flex-wrap items-center gap-3">
-            <a href="#contact" class="group flex items-center justify-between gap-4 bg-coral hover:bg-coralHover text-white px-6 py-3.5 rounded-xl font-medium text-sm md:text-base transition-all duration-300 shadow-[0_4px_25px_rgba(224,83,71,0.35)]">
-              <span>Hire Me</span>
-              <span class="inline-block transform group-hover:translate-x-1 transition-transform">→</span>
+            <a href="#works" class="group flex items-center justify-between gap-3 bg-coral hover:bg-coralHover text-white px-6 py-3.5 rounded-xl font-medium text-sm md:text-base transition-all duration-300 shadow-[0_4px_25px_rgba(224,83,71,0.35)]">
+              <span>View Works</span>
+              <span class="inline-block transform group-hover:translate-y-0.5 transition-transform">↓</span>
             </a>
 
-            <!-- Transparency Mode Toggle Button -->
-            <!--<button id="toggle-transparency-btn" class="text-xs text-amber-300 hover:text-amber-200 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-3.5 py-3 rounded-xl flex items-center gap-2 transition-all cursor-pointer" title="Toggle portrait transparent background (reveals 3D background behind subject)">
-              <span id="transparency-dot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
-              <span id="transparency-status-text" class="font-medium">BG: Transparent</span>
-            </button>-->
+            <a href="#contact" class="flex items-center gap-2 border border-white/15 hover:border-coral/50 bg-white/5 hover:bg-white/10 text-white hover:text-coral px-5 py-3.5 rounded-xl font-medium text-sm md:text-base transition-all">
+              <span>Hire Me</span>
+              <span>→</span>
+            </a>
 
             <!-- Subtle Image Switcher (Optional tool for testing local portrait) -->
             <label for="portrait-file-input" class="text-xs text-slate-400 hover:text-white cursor-pointer px-3.5 py-3 rounded-xl border border-white/10 hover:border-white/25 transition-colors flex items-center gap-1.5" title="Load custom portrait photo">
@@ -1081,7 +1104,39 @@
 
       if (openBtn) openBtn.addEventListener('click', openNav);
       if (closeBtn) closeBtn.addEventListener('click', closeNav);
-      document.querySelectorAll('.nav-item').forEach(item => item.addEventListener('click', closeNav));
+
+      // Smooth Anchor Navigation & Immediate Section Reveal
+      function navigateToSection(targetId) {
+        if (!targetId || targetId === '#') return;
+        const targetEl = document.querySelector(targetId);
+        if (targetEl) {
+          targetEl.scrollIntoView({ behavior: 'smooth' });
+          // Ensure target section cards and headings are immediately visible
+          const items = targetEl.querySelectorAll('h2, .minimal-card');
+          if (items.length > 0) {
+            if (typeof gsap !== 'undefined') {
+              gsap.to(items, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out', overwrite: 'auto' });
+            } else {
+              items.forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
+            }
+          }
+          if (typeof ScrollTrigger !== 'undefined') {
+            setTimeout(() => ScrollTrigger.refresh(), 350);
+          }
+        }
+      }
+
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+          const targetId = link.getAttribute('href');
+          if (targetId && targetId.startsWith('#') && targetId.length > 1) {
+            e.preventDefault();
+            closeNav();
+            navigateToSection(targetId);
+            history.pushState(null, '', targetId);
+          }
+        });
+      });
 
       // ==========================================
       // 3. COPY EMAIL INTERACTION
@@ -1686,32 +1741,85 @@
       animate();
 
       // ==========================================
-      // 5. GSAP SCROLLTRIGGER
+      // 5. GSAP SCROLLTRIGGER WITH SAFE REVEAL
       // ==========================================
-      if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
-        gsap.registerPlugin(ScrollTrigger);
+      function revealSection(sec) {
+        if (!sec) return;
+        const targets = sec.querySelectorAll('h2, .minimal-card');
+        if (typeof gsap !== 'undefined') {
+          gsap.to(targets, {
+            y: 0,
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.08,
+            ease: 'power2.out',
+            overwrite: 'auto'
+          });
+        } else {
+          targets.forEach(el => {
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+          });
+        }
+      }
 
-        gsap.from('#hero h1, #hero p, #hero a, #hero button', {
-          y: 30,
+      if (typeof gsap !== 'undefined') {
+        gsap.from('#hero h1, #hero p, #hero a, #hero button, #hero label', {
+          y: 25,
           opacity: 0,
-          duration: 0.9,
-          stagger: 0.1,
+          duration: 0.8,
+          stagger: 0.08,
           ease: 'power3.out'
         });
 
-        document.querySelectorAll('section:not(#hero)').forEach(sec => {
-          gsap.from(sec.querySelectorAll('h2, .minimal-card'), {
-            scrollTrigger: {
-              trigger: sec,
-              start: 'top 85%'
-            },
-            y: 35,
-            opacity: 0,
-            duration: 0.7,
-            stagger: 0.12,
-            ease: 'power2.out'
+        if (typeof ScrollTrigger !== 'undefined') {
+          gsap.registerPlugin(ScrollTrigger);
+
+          document.querySelectorAll('section:not(#hero)').forEach(sec => {
+            const targets = sec.querySelectorAll('h2, .minimal-card');
+            gsap.fromTo(targets, 
+              { y: 30, opacity: 0 },
+              {
+                scrollTrigger: {
+                  trigger: sec,
+                  start: 'top 92%',
+                  once: true,
+                  onEnter: () => revealSection(sec)
+                },
+                y: 0,
+                opacity: 1,
+                duration: 0.7,
+                stagger: 0.1,
+                ease: 'power2.out'
+              }
+            );
           });
-        });
+
+          // Refresh positions once images and fonts load
+          window.addEventListener('load', () => {
+            ScrollTrigger.refresh();
+          });
+          if (heroImg) {
+            heroImg.addEventListener('load', () => {
+              setTimeout(() => ScrollTrigger.refresh(), 150);
+            });
+          }
+        } else {
+          document.querySelectorAll('section:not(#hero)').forEach(revealSection);
+        }
+
+        // Safety fallback: ensure any visible or near-view section cards are never stuck at opacity:0
+        setTimeout(() => {
+          document.querySelectorAll('section:not(#hero)').forEach(sec => {
+            const rect = sec.getBoundingClientRect();
+            if (rect.top < window.innerHeight * 1.5) {
+              revealSection(sec);
+            }
+          });
+          if (typeof ScrollTrigger !== 'undefined') {
+            ScrollTrigger.refresh();
+          }
+        }, 600);
       }
 
     })();
