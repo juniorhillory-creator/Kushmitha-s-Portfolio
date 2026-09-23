@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hillory Kushmitha — Developer & UI/UX Designer</title>
+  <meta name="description" content="Portfolio of Hillory Kushmitha — BSc Computer Science Undergraduate, IIT InfoSchol Scholar, Full-Stack Developer & UI/UX Designer." />
+  <meta property="og:title" content="Hillory Kushmitha — Developer & UI/UX Designer" />
+  <meta property="og:description" content="Minimalist 3D portfolio featuring Three.js spatial interactions, GSAP animations, and selected engineering works." />
+  <meta property="og:type" content="website" />
+
+  <!-- Fonts: Instrument Serif + Plus Jakarta Sans + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+            display: ['Syne', 'sans-serif'],
+          },
+          colors: {
+            coral: '#e05347',
+            coralHover: '#f06256',
+            cyanAccent: '#00d2ff',
+            darkBg: '#000000',
+            darkCard: '#090a0f',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Three.js & GSAP with ScrollTrigger CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    :root {
+      --bg-color: #000000;
+      --accent-coral: #e05347;
+      --accent-cyan: #00d2ff;
+      --text-muted: #888888;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #000000;
+      color: #ffffff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow-x: hidden;
+      selection-background-color: #e05347;
+      selection-color: #ffffff;
+    }
+
+    ::selection {
+      background: #e05347;
+      color: #ffffff;
+    }
+
+    /* Fixed Three.js WebGL Canvas */
+    #webgl-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Seamless Portrait Vignette (blends photo into pure black #000000) */
+    .portrait-mask {
+      mask-image: radial-gradient(ellipse 65% 72% at 50% 38%, black 35%, transparent 80%);
+      -webkit-mask-image: radial-gradient(ellipse 65% 72% at 50% 38%, black 35%, transparent 80%);
+    }
+
+    /* Transparent Background: removes black backing completely so 3D scene shines behind */
+    .portrait-transparent {
+      mix-blend-mode: screen;
+      background: transparent !important;
+    }
+
+    /* Soundscape Equalizer Animation */
+    .eq-container {
+      display: flex;
+      align-items: flex-end;
+      gap: 2.5px;
+      height: 16px;
+    }
+    .eq-bar {
+      width: 2.5px;
+      height: 4px;
+      background: #71717a;
+      border-radius: 1px;
+      transition: height 0.25s ease, background-color 0.25s ease;
+    }
+    .soundscape-active .eq-bar {
+      background: #00d2ff;
+    }
+    .soundscape-active .eq-bar:nth-child(1) {
+      animation: eqBounce1 1.2s ease-in-out infinite alternate;
+    }
+    .soundscape-active .eq-bar:nth-child(2) {
+      animation: eqBounce2 0.85s ease-in-out infinite alternate 0.15s;
+    }
+    .soundscape-active .eq-bar:nth-child(3) {
+      animation: eqBounce3 1.4s ease-in-out infinite alternate 0.3s;
+    }
+    .soundscape-active .eq-bar:nth-child(4) {
+      animation: eqBounce4 0.95s ease-in-out infinite alternate 0.1s;
+    }
+
+    @keyframes eqBounce1 {
+      0% { height: 4px; background: #00d2ff; }
+      50% { height: 14px; background: #e05347; }
+      100% { height: 6px; background: #f59e0b; }
+    }
+    @keyframes eqBounce2 {
+      0% { height: 12px; background: #e05347; }
+      50% { height: 5px; background: #00d2ff; }
+      100% { height: 16px; background: #38bdf8; }
+    }
+    @keyframes eqBounce3 {
+      0% { height: 5px; background: #f59e0b; }
+      50% { height: 16px; background: #00d2ff; }
+      100% { height: 9px; background: #e05347; }
+    }
+    @keyframes eqBounce4 {
+      0% { height: 14px; background: #38bdf8; }
+      50% { height: 4px; background: #f59e0b; }
+      100% { height: 11px; background: #00d2ff; }
+    }
+
+    /* Subtle Minimalist Card */
+    .minimal-card {
+      background: rgba(14, 15, 20, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      backdrop-filter: blur(12px);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .minimal-card:hover {
+      border-color: rgba(224, 83, 71, 0.35);
+      background: rgba(18, 20, 28, 0.75);
+    }
+
+    /* Custom Cursor (Minimalist) */
+    #cursor-point {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 6px;
+      height: 6px;
+      background: #ffffff;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: opacity 0.2s ease;
+    }
+
+    #cursor-follower {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9998;
+      transform: translate(-50%, -50%);
+      transition: width 0.2s, height 0.2s, border-color 0.2s;
+    }
+
+    #cursor-follower.hovered {
+      width: 50px;
+      height: 50px;
+      border-color: #e05347;
+      background: rgba(224, 83, 71, 0.08);
+    }
+
+    @media (max-width: 768px) {
+      #cursor-point, #cursor-follower {
+        display: none !important;
+      }
+    }
+
+    /* Underline animation */
+    .hover-underline {
+      position: relative;
+    }
+    .hover-underline::after {
+      content: '';
+      position: absolute;
+      width: 0%;
+      height: 1px;
+      bottom: -2px;
+      left: 0;
+      background-color: #e05347;
+      transition: width 0.25s ease-out;
+    }
+    .hover-underline:hover::after {
+      width: 100%;
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #000000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #222222;
+      border-radius: 2px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #e05347;
+    }
+  </style>
+</head>
+<body class="bg-black text-white relative min-h-screen selection:bg-coral">
+
+  <!-- Interactive Three.js Background Canvas -->
+  <canvas id="webgl-canvas"></canvas>
+
+  <!-- Minimal Cursor Elements -->
+  <div id="cursor-point"></div>
+  <div id="cursor-follower"></div>
+
+  <!-- FULLSCREEN MINIMAL NAVIGATION OVERLAY (Controlled by hamburger) -->
+  <div id="nav-overlay" class="fixed inset-0 bg-black/95 z-50 flex flex-col justify-between p-8 md:p-16 opacity-0 pointer-events-none transition-all duration-500">
+    <div class="flex items-center justify-between">
+      <span class="font-bold tracking-tight text-xl text-white">Hillory<span class="text-coral">.</span></span>
+      <button id="close-menu-btn" class="text-slate-400 hover:text-white p-2 transition-colors focus:outline-none">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="flex flex-col gap-5 md:gap-7 my-auto max-w-xl">
+      <a href="#hero" class="nav-item text-3xl md:text-5xl font-light text-slate-300 hover:text-coral transition-colors flex items-baseline gap-4">
+        <span class="text-xs font-mono text-coral">01</span>
+        <span>Home</span>
+      </a>
+      <a href="#works" class="nav-item text-3xl md:text-5xl font-light text-slate-300 hover:text-coral transition-colors flex items-baseline gap-4">
+        <span class="text-xs font-mono text-coral">02</span>
+        <span>Selected Works</span>
+      </a>
+      <a href="#about" class="nav-item text-3xl md:text-5xl font-light text-slate-300 hover:text-coral transition-colors flex items-baseline gap-4">
+        <span class="text-xs font-mono text-coral">03</span>
+        <span>About & Philosophy</span>
+      </a>
+      <a href="#experience" class="nav-item text-3xl md:text-5xl font-light text-slate-300 hover:text-coral transition-colors flex items-baseline gap-4">
+        <span class="text-xs font-mono text-coral">04</span>
+        <span>Experience & Education</span>
+      </a>
+      <a href="#honors" class="nav-item text-3xl md:text-5xl font-light text-slate-300 hover:text-coral transition-colors flex items-baseline gap-4">
+        <span class="text-xs font-mono text-coral">05</span>
+        <span>Honors & Martial Arts</span>
+      </a>
+      <a href="#contact" class="nav-item text-3xl md:text-5xl font-light text-slate-300 hover:text-coral transition-colors flex items-baseline gap-4">
+        <span class="text-xs font-mono text-coral">06</span>
+        <span>Get in Touch</span>
+      </a>
+    </nav>
+
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 border-t border-white/10 text-xs font-mono text-slate-400">
+      <div class="flex items-center gap-4 flex-wrap">
+        <div>kushmitha259@gmail.com · +94 74 328 9435</div>
+        <button id="menu-soundscape-btn" class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] text-slate-300 transition-colors cursor-pointer" title="Toggle Space Soundscape">
+          <span class="w-1.5 h-1.5 rounded-full bg-slate-500" id="menu-sound-dot"></span>
+          <span id="menu-sound-text">Soundscape: Off</span>
+        </button>
+      </div>
+      <div class="flex gap-6">
+        <a href="https://github.com/juniorhillory-creator" target="_blank" rel="noopener noreferrer" class="hover:text-coral transition-colors">GitHub</a>
+        <a href="https://www.linkedin.com/in/Contact-Hillory-Kushmitha" target="_blank" rel="noopener noreferrer" class="hover:text-coral transition-colors">LinkedIn</a>
+        <a href="https://github.com/juniorhillory-creator/StudyMachan-App.git" target="_blank" rel="noopener noreferrer" class="hover:text-coral transition-colors">StudyMachan</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP BAR (Exact 1:1 match to reference) -->
+  <header class="fixed top-0 left-0 right-0 z-40 bg-black/40 backdrop-blur-sm px-6 md:px-14 py-6">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+      
+      <!-- Brand Logo / Name with Coral Accent -->
+      <a href="#hero" class="flex items-center gap-1.5 group">
+        <span class="text-2xl font-bold tracking-tight text-white group-hover:text-coral transition-colors">Hillory</span>
+        <svg class="w-3.5 h-3.5 text-coral transform -rotate-12 translate-y-1" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/>
+        </svg>
+      </a>
+
+      <!-- Direct Email & Soundscape Toggle in Top Bar -->
+      <div class="flex items-center gap-3 md:gap-5">
+        <a href="mailto:kushmitha259@gmail.com" class="hidden md:block text-xs md:text-sm text-slate-300 hover:text-white transition-colors font-sans tracking-wide">
+          kushmitha259@gmail.com
+        </a>
+
+        <!-- Header Minimal Soundscape Toggle -->
+        <button id="header-soundscape-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 hover:border-cyanAccent/40 bg-white/[0.03] hover:bg-white/[0.08] text-xs font-mono text-slate-300 transition-all cursor-pointer" title="Toggle Ambient Space Soundscape">
+          <div class="eq-container" id="header-eq">
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+            <span class="eq-bar"></span>
+          </div>
+          <span id="header-sound-label" class="hidden sm:inline text-[11px] text-slate-400">Audio: Off</span>
+        </button>
+
+        <!-- Hamburger Menu Icon (3 sleek horizontal lines) -->
+        <button id="open-menu-btn" class="flex flex-col justify-center items-end gap-1.5 w-8 h-8 group focus:outline-none" aria-label="Open Navigation">
+          <span class="w-7 h-[2px] bg-white group-hover:bg-coral transition-all"></span>
+          <span class="w-5 h-[2px] bg-white group-hover:bg-coral group-hover:w-7 transition-all"></span>
+          <span class="w-6 h-[2px] bg-white group-hover:bg-coral group-hover:w-7 transition-all"></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- MAIN SCROLLABLE CONTAINER -->
+  <main class="relative z-10">
+
+    <!-- ======================================================== -->
+    <!-- 1. HERO SECTION (100% Matching Layout of Reference Image) -->
+    <!-- ======================================================== -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center px-6 md:px-14 pt-24 pb-16 overflow-hidden">
+      
+      <!-- Center High-Contrast Portrait (Emerging from Pitch Black) -->
+      <div class="absolute inset-0 flex items-center justify-center pointer-events-none z-0">
+        <div class="relative w-full max-w-[500px] h-[75vh] max-h-[680px] flex items-center justify-center">
+          
+          <!-- Portrait with Transparent Background & Golden Rim Glow Matching Gemini_Generated_Image_v1tufrv1tufrv1tu.jpg -->
+          <img id="hero-portrait-img" 
+               src="me in black.jpg" 
+               alt="Hillory Kushmitha" 
+               class="portrait-mask portrait-transparent w-full h-full object-cover object-top opacity-95 transition-all duration-700"
+               onerror="
+                 if (!this.dataset.retried) {
+                   this.dataset.retried = '1';
+                   this.src = '/Gemini_Generated_Image_v1tufrv1tufrv1tu.jpg';
+                 } else if (this.dataset.retried === '1') {
+                   this.dataset.retried = '2';
+                   this.src = './Gemini_Generated_Image_v1tufrv1tufrv1tu.jpg';
+                 } else {
+                   this.style.display='none';
+                   document.getElementById('portrait-svg-render').style.display='block';
+                 }
+               "
+          />
+
+          <!-- Hyper-Detailed Exact Reproduction of Gemini_Generated_Image_v1tufrv1tufrv1tu (Suit, Glasses, Golden Rim Light) -->
+          <div id="portrait-svg-render" class="portrait-mask w-full h-full hidden">
+            <svg class="w-full h-full" viewBox="0 0 500 620" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <!-- Warm Golden Amber Rim Light Gradients -->
+                <radialGradient id="amberAuraLeft" cx="20%" cy="40%" r="50%">
+                  <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.8"/>
+                  <stop offset="60%" stop-color="#d97706" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+                </radialGradient>
+                <radialGradient id="amberAuraRight" cx="80%" cy="40%" r="50%">
+                  <stop offset="0%" stop-color="#f59e0b" stop-opacity="0.8"/>
+                  <stop offset="60%" stop-color="#d97706" stop-opacity="0.3"/>
+                  <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+                </radialGradient>
+                <!-- Skin Tones -->
+                <linearGradient id="faceGrad" x1="0.3" y1="0.1" x2="0.7" y2="0.9">
+                  <stop offset="0%" stop-color="#bb8660"/>
+                  <stop offset="45%" stop-color="#a46e4c"/>
+                  <stop offset="85%" stop-color="#7a4d33"/>
+                  <stop offset="100%" stop-color="#462c1d"/>
+                </linearGradient>
+                <!-- Hair Gradient -->
+                <linearGradient id="pompadourHair" x1="0.5" y1="0" x2="0.5" y2="1">
+                  <stop offset="0%" stop-color="#242124"/>
+                  <stop offset="70%" stop-color="#121113"/>
+                  <stop offset="100%" stop-color="#090809"/>
+                </linearGradient>
+                <!-- Suit Gradient -->
+                <linearGradient id="suitBlack" x1="0.5" y1="0" x2="0.5" y2="1">
+                  <stop offset="0%" stop-color="#181a20"/>
+                  <stop offset="40%" stop-color="#111317"/>
+                  <stop offset="100%" stop-color="#08080a"/>
+                </linearGradient>
+                <!-- Golden Rim Glow Filter -->
+                <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+                  <feGaussianBlur stdDeviation="8" result="blur"/>
+                  <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+              </defs>
+
+              <!-- Golden Rim Glow Halos (Behind Subject) -->
+              <ellipse cx="140" cy="380" rx="90" ry="180" fill="url(#amberAuraLeft)" />
+              <ellipse cx="360" cy="380" rx="90" ry="180" fill="url(#amberAuraRight)" />
+              <ellipse cx="170" cy="180" rx="50" ry="90" fill="url(#amberAuraLeft)" />
+              <ellipse cx="330" cy="180" rx="50" ry="90" fill="url(#amberAuraRight)" />
+
+              <!-- Suit Body & Shoulders -->
+              <path d="M70 620C70 470 120 415 250 415C380 415 430 470 430 620H70Z" fill="url(#suitBlack)"/>
+              
+              <!-- Amber Rim Lighting on Suit Edges -->
+              <path d="M72 620C72 475 118 420 230 417" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" opacity="0.85" filter="url(#goldGlow)"/>
+              <path d="M428 620C428 475 382 420 270 417" stroke="#f59e0b" stroke-width="6" stroke-linecap="round" opacity="0.85" filter="url(#goldGlow)"/>
+
+              <!-- Suit Lapels -->
+              <path d="M175 415L230 550L250 555L270 550L325 415L290 415L250 495L210 415H175Z" fill="#1e222d"/>
+              <path d="M210 415L250 495V620H240V495Z" fill="#0d0e12"/>
+              <path d="M290 415L250 495V620H260V495Z" fill="#0d0e12"/>
+
+              <!-- Crisp White Shirt Collar -->
+              <path d="M205 385L250 460L295 385L270 375L250 410L230 375L205 385Z" fill="#f8fafc"/>
+              <path d="M215 385L250 425L285 385" stroke="#cbd5e1" stroke-width="1.5"/>
+
+              <!-- Black Silk Tie -->
+              <!-- Tie Knot -->
+              <path d="M236 415H264L258 445H242L236 415Z" fill="#14161d"/>
+              <path d="M242 445L250 450L258 445L265 620H235L242 445Z" fill="#0b0c10"/>
+              <!-- Tie highlights -->
+              <path d="M248 447L252 620" stroke="#252936" stroke-width="2"/>
+
+              <!-- Neck -->
+              <path d="M215 320V395C225 405 275 405 285 395V320H215Z" fill="#8f5b3a"/>
+              <!-- Amber Rim on Neck -->
+              <path d="M215 325V385" stroke="#f59e0b" stroke-width="3" opacity="0.75"/>
+              <path d="M285 325V385" stroke="#f59e0b" stroke-width="3" opacity="0.75"/>
+
+              <!-- Head & Face -->
+              <ellipse cx="250" cy="245" rx="88" ry="110" fill="url(#faceGrad)"/>
+              
+              <!-- Amber Rim Lighting on Cheeks and Temples -->
+              <path d="M165 200C160 235 165 275 190 320" stroke="#f59e0b" stroke-width="4.5" stroke-linecap="round" opacity="0.9" filter="url(#goldGlow)"/>
+              <path d="M335 200C340 235 335 275 310 320" stroke="#f59e0b" stroke-width="4.5" stroke-linecap="round" opacity="0.9" filter="url(#goldGlow)"/>
+
+              <!-- Modern Volumetric Hair (Styled up like the uploaded image) -->
+              <path d="M162 210C158 140 190 90 250 90C310 90 342 140 338 210C310 165 285 160 250 160C215 160 190 165 162 210Z" fill="url(#pompadourHair)"/>
+              <!-- Golden Rim Glow on Top of Hair -->
+              <path d="M175 160C190 110 220 95 250 95C280 95 310 110 325 160" stroke="#f59e0b" stroke-width="4" stroke-linecap="round" opacity="0.85" filter="url(#goldGlow)"/>
+
+              <!-- Thick Modern Rectangular Black Glasses (Exact Match to Image) -->
+              <g id="glasses">
+                <!-- Left Frame -->
+                <rect x="178" y="215" width="62" height="42" rx="8" stroke="#121316" stroke-width="4.5" fill="rgba(255,255,255,0.04)"/>
+                <!-- Right Frame -->
+                <rect x="260" y="215" width="62" height="42" rx="8" stroke="#121316" stroke-width="4.5" fill="rgba(255,255,255,0.04)"/>
+                <!-- Bridge -->
+                <path d="M240 230C246 226 254 226 260 230" stroke="#121316" stroke-width="4.5" stroke-linecap="round"/>
+                <!-- Temples -->
+                <line x1="178" y1="228" x2="162" y2="225" stroke="#121316" stroke-width="4"/>
+                <line x1="322" y1="228" x2="338" y2="225" stroke="#121316" stroke-width="4"/>
+                <!-- Anti-reflective subtle bluish-white specular glint -->
+                <line x1="184" y1="222" x2="215" y2="222" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+                <line x1="266" y1="222" x2="297" y2="222" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" stroke-linecap="round"/>
+              </g>
+
+              <!-- Eyes & Brows -->
+              <path d="M182 208Q208 202 234 208" stroke="#141416" stroke-width="4" stroke-linecap="round"/>
+              <path d="M266 208Q292 202 318 208" stroke="#141416" stroke-width="4" stroke-linecap="round"/>
+              
+              <!-- Eyeballs with sharp pupils and glints -->
+              <ellipse cx="209" cy="235" rx="8" ry="8" fill="#1c1917"/>
+              <ellipse cx="291" cy="235" rx="8" ry="8" fill="#1c1917"/>
+              <circle cx="211" cy="233" r="2.5" fill="#ffffff"/>
+              <circle cx="293" cy="233" r="2.5" fill="#ffffff"/>
+
+              <!-- Nose -->
+              <path d="M248 238L242 276H258" stroke="#683d24" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+              <ellipse cx="240" cy="276" rx="4" ry="2" fill="#542e18"/>
+              <ellipse cx="260" cy="276" rx="4" ry="2" fill="#542e18"/>
+
+              <!-- Confident, Pleasant Smile -->
+              <path d="M228 304Q250 318 272 304" stroke="#482512" stroke-width="3" stroke-linecap="round" fill="none"/>
+              <path d="M232 305Q250 314 268 305" fill="#85482b" opacity="0.6"/>
+            </svg>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Foreground Content Grid (Split 2 Columns over portrait) -->
+      <div class="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+        
+        <!-- LEFT COLUMN: "Hi, I'm Hillory / BSc CS Undergraduate & Developer / Hire Me ->" -->
+        <div class="lg:col-span-6 flex flex-col items-start justify-center">
+          
+          <div class="space-y-2 mb-8">
+            <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif text-white tracking-tight leading-[0.95]">
+              Hi,
+            </h1>
+            <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-serif text-white tracking-tight leading-[0.95]">
+              I’m <span class="text-coral italic font-normal">Hillory</span>
+            </h1>
+          </div>
+
+          <p class="text-lg sm:text-xl md:text-2xl text-slate-200 font-normal tracking-wide mb-10">
+            BSc Computer Science Undergraduate & Developer
+          </p>
+
+          <!-- Coral Button & Picture Controls (Switch Photo + Background Transparency Toggle) -->
+          <div class="flex flex-wrap items-center gap-3">
+            <a href="#contact" class="group flex items-center justify-between gap-4 bg-coral hover:bg-coralHover text-white px-6 py-3.5 rounded-xl font-medium text-sm md:text-base transition-all duration-300 shadow-[0_4px_25px_rgba(224,83,71,0.35)]">
+              <span>Hire Me</span>
+              <span class="inline-block transform group-hover:translate-x-1 transition-transform">→</span>
+            </a>
+
+            <!-- Transparency Mode Toggle Button -->
+            <!--<button id="toggle-transparency-btn" class="text-xs text-amber-300 hover:text-amber-200 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-3.5 py-3 rounded-xl flex items-center gap-2 transition-all cursor-pointer" title="Toggle portrait transparent background (reveals 3D background behind subject)">
+              <span id="transparency-dot" class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+              <span id="transparency-status-text" class="font-medium">BG: Transparent</span>
+            </button>-->
+
+            <!-- Subtle Image Switcher (Optional tool for testing local portrait) -->
+            <label for="portrait-file-input" class="text-xs text-slate-400 hover:text-white cursor-pointer px-3.5 py-3 rounded-xl border border-white/10 hover:border-white/25 transition-colors flex items-center gap-1.5" title="Load custom portrait photo">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <span>Switch Photo</span>
+            </label>
+            <input type="file" id="portrait-file-input" accept="image/*" class="hidden">
+          </div>
+
+        </div>
+
+        <!-- RIGHT COLUMN: "Expert on / Based in Sri Lanka... / Download CV" -->
+        <div class="lg:col-span-6 flex flex-col items-start lg:items-end text-left lg:text-left justify-center lg:pl-16">
+          <div class="max-w-md space-y-6">
+            
+            <!-- Expert On Kicker -->
+            <div class="text-coral font-medium text-sm md:text-base tracking-wide">
+              Expert on
+            </div>
+
+            <!-- Headline -->
+            <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-white leading-[1.25] tracking-tight">
+              Based in Sri Lanka<br>
+              i’m developer and<br>
+              UI/UX designer.
+            </h2>
+
+            <!-- Body Description -->
+            <p class="text-slate-400 text-sm md:text-base leading-relaxed font-light">
+              Are you looking for an ambitious developer to build your product, innovate game mechanics, and scale software? Let’s shake hands with me.
+            </p>
+
+            <!-- Download CV with Coral Underline -->
+            <div class="pt-2">
+              <a href="#about" class="inline-flex items-center gap-2 text-white font-medium text-base hover:text-coral transition-colors border-b-2 border-coral pb-1">
+                <span>Download CV</span>
+                <span class="text-xs">⤓</span>
+              </a>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <!-- BOTTOM BAR OF HERO (Matching Reference Exactly) -->
+      <div class="absolute bottom-6 left-6 md:left-14 right-6 md:right-14 z-20 flex items-center justify-between text-xs text-slate-400 font-sans">
+        
+        <!-- Bottom Left: Social Icons & Dribbble/Github Link -->
+        <div class="flex items-center gap-6">
+          <!-- Facebook / Social 1 -->
+          <a href="https://github.com/juniorhillory-creator" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors" title="GitHub">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+          </a>
+
+          <!-- Twitter / X -->
+          <a href="https://www.linkedin.com/in/Contact-Hillory-Kushmitha" target="_blank" rel="noopener noreferrer" class="hover:text-white transition-colors" title="LinkedIn">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/></svg>
+          </a>
+
+          <!-- Instagram -->
+          <a href="mailto:kushmitha259@gmail.com" class="hover:text-white transition-colors" title="Email">
+            <svg class="w-4 h-4 fill-none stroke-current" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </a>
+
+          <!-- Dribbble-like Pink Ball Icon + Link -->
+          <a href="https://github.com/juniorhillory-creator" target="_blank" rel="noopener noreferrer" class="hidden sm:flex items-center gap-2 text-slate-300 hover:text-white transition-colors">
+            <span class="w-4 h-4 rounded-full bg-[#ea4c89] flex items-center justify-center text-[9px] text-white">●</span>
+            <span>github.com/juniorhillory-creator</span>
+          </a>
+        </div>
+
+        <!-- Bottom Right: Let's Chat with pulsing green online dot -->
+        <a href="#contact" class="flex items-center gap-2 text-slate-200 hover:text-coral transition-colors font-medium">
+          <span>Let's Chat</span>
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd"></path>
+          </svg>
+        </a>
+
+      </div>
+
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- 2. SELECTED WORKS (Minimalist, Clean Editorial Cards)     -->
+    <!-- ======================================================== -->
+    <section id="works" class="py-28 px-6 md:px-14 max-w-7xl mx-auto border-t border-white/5 scroll-mt-20">
+      
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-4">
+        <div>
+          <span class="text-coral text-xs font-mono tracking-widest uppercase block mb-2">Portfolio</span>
+          <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white">Selected Works</h2>
+        </div>
+        <p class="text-slate-400 text-sm max-w-md font-light">
+          A collection of full-stack web applications, enterprise systems, and real-time interactive game mechanics.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+        
+        <!-- Project 1: StudyMachan -->
+        <div class="minimal-card p-8 rounded-2xl flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between text-xs text-slate-500 font-mono mb-4">
+              <span class="text-coral">React.js · Firebase</span>
+              <span>2026</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white group-hover:text-coral transition-colors mb-3">
+              StudyMachan Online Tutoring Platform
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed font-light mb-8">
+              A collaborative academic portal engineered to bridge verified tutors and students with virtual sessions, shared study materials, and peer communication.
+            </p>
+          </div>
+          <div class="flex items-center gap-6 pt-4 border-t border-white/10 text-xs font-mono">
+            <a href="https://github.com/juniorhillory-creator/StudyMachan-App.git" target="_blank" rel="noopener noreferrer" class="text-white hover:text-coral transition-colors flex items-center gap-1.5">
+              <span>View Repository</span>
+              <span>→</span>
+            </a>
+            <a href="https://github.com/Maleesha-Fernando-25/StudyMachan-Landing-Page-.git" target="_blank" rel="noopener noreferrer" class="text-slate-500 hover:text-slate-300 transition-colors">
+              Landing Page
+            </a>
+          </div>
+        </div>
+
+        <!-- Project 2: Employee Management System -->
+        <div class="minimal-card p-8 rounded-2xl flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between text-xs text-slate-500 font-mono mb-4">
+              <span class="text-coral">PHP · MySQL DBMS</span>
+              <span>NIBM Diploma Project</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white group-hover:text-coral transition-colors mb-3">
+              DriveOne Employee Management System
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed font-light mb-8">
+              Innovative Design Project for the Diploma in ICT at NIBM, Colombo. Enterprise portal handling role-based staff records, attendance, payroll workflows, and organizational structures.
+            </p>
+          </div>
+          <div class="flex items-center gap-6 pt-4 border-t border-white/10 text-xs font-mono">
+            <a href="https://drive.google.com/drive/folders/1beKAkudHNIOvp4RCW1h8hlqZEhrrRIDH" target="_blank" rel="noopener noreferrer" class="text-white hover:text-coral transition-colors flex items-center gap-1.5">
+              <span>Drive Artifacts</span>
+              <span>→</span>
+            </a>
+            <span class="text-slate-500">NIBM Colombo</span>
+          </div>
+        </div>
+
+        <!-- Project 3: PicharLK -->
+        <div class="minimal-card p-8 rounded-2xl flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between text-xs text-slate-500 font-mono mb-4">
+              <span class="text-coral">PHP · MySQL · Web</span>
+              <span>Ticketing Engine</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white group-hover:text-coral transition-colors mb-3">
+              PicharLK: Online Ticket Booking Application
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed font-light mb-8">
+              Interactive entertainment booking platform with dynamic cinema seating map reservations, scheduled movie showtimes, and digital invoice generation.
+            </p>
+          </div>
+          <div class="flex items-center gap-6 pt-4 border-t border-white/10 text-xs font-mono">
+            <a href="https://drive.google.com/drive/folders/1MJlLQGPOVtRFprtPDdgr_o9wlXOwWm_9" target="_blank" rel="noopener noreferrer" class="text-white hover:text-coral transition-colors flex items-center gap-1.5">
+              <span>Project Artifacts</span>
+              <span>→</span>
+            </a>
+            <span class="text-slate-500">Web Engine</span>
+          </div>
+        </div>
+
+        <!-- Project 4: Unity Game Engine Mechanics -->
+        <div class="minimal-card p-8 rounded-2xl flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between text-xs text-slate-500 font-mono mb-4">
+              <span class="text-coral">Unity Engine · C#</span>
+              <span>Spatial & Mechanics</span>
+            </div>
+            <h3 class="text-2xl font-bold text-white group-hover:text-coral transition-colors mb-3">
+              Unity 3D Mechanics & Blender Assets
+            </h3>
+            <p class="text-slate-400 text-sm leading-relaxed font-light mb-8">
+              Interactive physics-based player controller logic, collision detection algorithms, 3D spatial camera loops, and low-poly assets modeled in Blender.
+            </p>
+          </div>
+          <div class="flex items-center gap-6 pt-4 border-t border-white/10 text-xs font-mono">
+            <span class="text-white">Active R&D Track</span>
+            <span class="text-slate-500">C# Scripts & Modeling</span>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- 3. ABOUT & BIO (Clean, Minimalist Editorial)             -->
+    <!-- ======================================================== -->
+    <section id="about" class="py-28 px-6 md:px-14 max-w-7xl mx-auto border-t border-white/5 scroll-mt-20">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+        <div class="lg:col-span-5">
+          <span class="text-coral text-xs font-mono tracking-widest uppercase block mb-2">Philosophy</span>
+          <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white mb-6">
+            Curiosity &<br>Unrelenting Drive.
+          </h2>
+          <div class="text-sm font-mono text-slate-400 space-y-2">
+            <div><span class="text-slate-500">Name:</span> Sangapala Arachchige Don Alloy Hillory Kushmitha</div>
+            <div><span class="text-slate-500">Student ID:</span> 20260626</div>
+            <div><span class="text-slate-500">Location:</span> Ragama, Sri Lanka</div>
+            <div><span class="text-slate-500">Languages:</span> English · Sinhala</div>
+          </div>
+        </div>
+
+        <div class="lg:col-span-7 space-y-6 text-slate-300 font-light text-base md:text-lg leading-relaxed">
+          <p>
+            I am a developer driven by curiosity and a relentless willingness to learn and unlearn. From exploring game mechanics in Unity to engineering full-stack employee management systems, I love pushing the boundaries of what a web interface can do.
+          </p>
+          <p>
+            I combine clean code, an eye for aesthetics, and a collaborative mindset to craft digital products that leave a lasting impression. As an ambitious <strong class="text-white font-medium">IIT InfoSchol scholar</strong>, I balance multi-language programming with practical exposure to corporate workflows.
+          </p>
+          <div class="pt-6 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs font-mono text-slate-400">
+            <div>
+              <span class="text-white block font-bold text-sm mb-1">01. Web & Mobile</span>
+              React.js, JavaScript, HTML5/CSS3, PHP, Python, Android SDK
+            </div>
+            <div>
+              <span class="text-white block font-bold text-sm mb-1">02. Databases</span>
+              MySQL DBMS, Firebase Auth & Firestore, Relational Data
+            </div>
+            <div>
+              <span class="text-white block font-bold text-sm mb-1">03. Spatial Tech</span>
+              Unity Engine, Blender 3D, Three.js, Figma UI/UX
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- 4. EXPERIENCE & EDUCATION TIMELINE                      -->
+    <!-- ======================================================== -->
+    <section id="experience" class="py-28 px-6 md:px-14 max-w-7xl mx-auto border-t border-white/5 scroll-mt-20">
+      
+      <div class="mb-16">
+        <span class="text-coral text-xs font-mono tracking-widest uppercase block mb-2">Milestones</span>
+        <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white">Experience & Education</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+        
+        <!-- Experience Column -->
+        <div class="space-y-8">
+          <h3 class="text-lg font-bold text-white tracking-wide border-b border-white/10 pb-3">Work Experience</h3>
+          
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+              <span class="text-coral">Feb 2026 – July 2026</span>
+              <span>Colombo, Sri Lanka</span>
+            </div>
+            <h4 class="text-xl font-bold text-white">IT Operator</h4>
+            <div class="text-sm text-slate-300">Tyre House Group, Benedictson (Maxxis - Sri Lanka) (Pvt) Ltd.</div>
+            <p class="text-xs text-slate-400 leading-relaxed font-light pt-1">
+              Customer outreach, order processing, invoicing, payment receipts, and enterprise workflow management.
+            </p>
+          </div>
+
+          <div class="space-y-2 pt-6 border-t border-white/5">
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+              <span class="text-coral">Feb 2026</span>
+              <span>Kandana</span>
+            </div>
+            <h4 class="text-xl font-bold text-white">ICT Instructor</h4>
+            <div class="text-sm text-slate-300">De Mazenod College</div>
+            <p class="text-xs text-slate-400 leading-relaxed font-light pt-1">
+              Instructional guidance for ICT students during national examination paper evaluation and academic training.
+            </p>
+          </div>
+        </div>
+
+        <!-- Education Column -->
+        <div class="space-y-8">
+          <h3 class="text-lg font-bold text-white tracking-wide border-b border-white/10 pb-3">Education & Degrees</h3>
+
+          <div class="space-y-2">
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+              <span class="text-coral">2027 – 2032</span>
+              <span>Colombo / London</span>
+            </div>
+            <h4 class="text-xl font-bold text-white">BSc (Hon) in Computer Science</h4>
+            <div class="text-sm text-slate-300">University of Westminster, UK · Informatics Institute of Technology (IIT)</div>
+            <p class="text-xs text-slate-400 leading-relaxed font-light pt-1">
+              IIT InfoSchol scholar induction combining software engineering, data structures, and corporate exposure.
+            </p>
+          </div>
+
+          <div class="space-y-2 pt-6 border-t border-white/5">
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+              <span class="text-coral">Oct 2024</span>
+              <span class="text-emerald-400 font-bold">3.53 / 4.0 GPA</span>
+            </div>
+            <h4 class="text-xl font-bold text-white">Diploma in ICT</h4>
+            <div class="text-sm text-slate-300">National Institute of Business Management (NIBM), Colombo</div>
+            <p class="text-xs text-slate-400 leading-relaxed font-light pt-1">
+              Graduated with honors. Coursework covering web engineering, database architecture, and network systems.
+            </p>
+          </div>
+
+          <div class="space-y-2 pt-6 border-t border-white/5">
+            <div class="flex items-center justify-between text-xs font-mono text-slate-400">
+              <span class="text-coral">De Mazenod College</span>
+              <span>2021 & 2026</span>
+            </div>
+            <h4 class="text-xl font-bold text-white">GCE Advanced & Ordinary Level</h4>
+            <div class="text-sm text-slate-300">A/L: ICT (B), Physics (C), Maths (S) · O/L: 7 As, 2 Bs Distinction</div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- 5. HONORS & ACHIEVEMENTS                                -->
+    <!-- ======================================================== -->
+    <section id="honors" class="py-28 px-6 md:px-14 max-w-7xl mx-auto border-t border-white/5 scroll-mt-20">
+      
+      <div class="mb-16">
+        <span class="text-coral text-xs font-mono tracking-widest uppercase block mb-2">Accolades</span>
+        <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-white">Extracurricular Honors</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        
+        <div class="minimal-card p-6 rounded-xl">
+          <span class="text-coral text-xs font-mono block mb-2">GOLD MEDAL</span>
+          <h4 class="text-lg font-bold text-white mb-2">14th Shito-Ryu Karate Championship</h4>
+          <p class="text-xs text-slate-400 font-light leading-relaxed">
+            International Karate-Do Championship Champion. Wu-Shu and Karate athlete (Shuko Kai Shito Ryu Federation).
+          </p>
+        </div>
+
+        <div class="minimal-card p-6 rounded-xl">
+          <span class="text-coral text-xs font-mono block mb-2">ASTRONOMY</span>
+          <h4 class="text-lg font-bold text-white mb-2">Mazenodian Space Society</h4>
+          <p class="text-xs text-slate-400 font-light leading-relaxed">
+            Member of the Mazenodian Astronomy and Space Society, exploring celestial mechanics and observation.
+          </p>
+        </div>
+
+        <div class="minimal-card p-6 rounded-xl">
+          <span class="text-coral text-xs font-mono block mb-2">OLYMPIAD</span>
+          <h4 class="text-lg font-bold text-white mb-2">National Geography Olympiad</h4>
+          <p class="text-xs text-slate-400 font-light leading-relaxed">
+            Junior Competition Participant (2019) with honors in environmental cartography and spatial dynamics.
+          </p>
+        </div>
+
+        <div class="minimal-card p-6 rounded-xl">
+          <span class="text-coral text-xs font-mono block mb-2">COMMUNITY</span>
+          <h4 class="text-lg font-bold text-white mb-2">Prefect Guild & Senior Choir</h4>
+          <p class="text-xs text-slate-400 font-light leading-relaxed">
+            Prefect at St. Lazarus Sunday School, St. Lazarus Senior Choir singer, and Youth Catholic Student Movement member.
+          </p>
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- ======================================================== -->
+    <!-- 6. MINIMAL CONTACT & CONNECT                            -->
+    <!-- ======================================================== -->
+    <section id="contact" class="py-28 px-6 md:px-14 max-w-7xl mx-auto border-t border-white/5 scroll-mt-20">
+      
+      <div class="max-w-2xl">
+        <span class="text-coral text-xs font-mono tracking-widest uppercase block mb-2">Initiate</span>
+        <h2 class="text-4xl md:text-6xl font-bold tracking-tight text-white mb-6">
+          Let’s build something meaningful.
+        </h2>
+        <p class="text-slate-400 text-base md:text-lg font-light leading-relaxed mb-10">
+          Interested in discussing internship roles, full-stack projects, or creative engineering collaborations? Drop an email directly.
+        </p>
+
+        <div class="space-y-4 font-mono text-sm">
+          <div class="flex items-center gap-4">
+            <span class="text-slate-500 w-24">Email:</span>
+            <a href="mailto:kushmitha259@gmail.com" class="text-white hover:text-coral transition-colors underline decoration-coral">
+              kushmitha259@gmail.com
+            </a>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-slate-500 w-24">Phone:</span>
+            <a href="tel:+94743289435" class="text-white hover:text-coral transition-colors">
+              +94 74 328 9435
+            </a>
+          </div>
+          <div class="flex items-center gap-4">
+            <span class="text-slate-500 w-24">Location:</span>
+            <span class="text-slate-300">188/B, Kurukulawa, Ragama, Sri Lanka</span>
+          </div>
+        </div>
+
+        <div class="mt-12 flex flex-wrap gap-4">
+          <a href="mailto:kushmitha259@gmail.com?subject=Opportunity%20Inquiry%20for%20Hillory%20Kushmitha" class="bg-coral hover:bg-coralHover text-white px-8 py-3.5 rounded-xl font-medium text-sm transition-all duration-300 shadow-[0_4px_25px_rgba(224,83,71,0.35)]">
+            Send Email Directly →
+          </a>
+          <button id="copy-email-btn" class="border border-white/15 hover:border-white/40 text-slate-300 hover:text-white px-6 py-3.5 rounded-xl text-sm transition-colors">
+            <span id="copy-email-text">Copy Email Address</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- MINIMAL FOOTER WITH AMBIENT SPACE SOUNDSCAPE PLAYER -->
+  <footer class="border-t border-white/5 py-10 px-6 md:px-14 text-xs font-mono text-slate-500">
+    <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
+      
+      <!-- Copyright & Credentials -->
+      <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6 text-center sm:text-left">
+        <span>© 2026 Hillory Kushmitha · Student ID: 20260626</span>
+        <span class="hidden sm:inline text-white/10">|</span>
+        <div class="flex gap-6">
+          <a href="https://github.com/juniorhillory-creator" target="_blank" rel="noopener noreferrer" class="hover:text-slate-300 transition-colors">GitHub</a>
+          <a href="https://www.linkedin.com/in/Contact-Hillory-Kushmitha" target="_blank" rel="noopener noreferrer" class="hover:text-slate-300 transition-colors">LinkedIn</a>
+        </div>
+      </div>
+
+      <!-- AMBIENT SPACE SOUNDSCAPE AUDIO PLAYER -->
+      <div id="footer-soundscape-container" class="flex items-center gap-4 py-2.5 px-5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.05] border border-white/10 hover:border-cyanAccent/30 backdrop-blur-md transition-all duration-300 shadow-lg shadow-black/40">
+        
+        <!-- Play / Pause Action Button -->
+        <button id="footer-soundscape-toggle" class="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 hover:bg-coral text-white transition-all duration-300 focus:outline-none cursor-pointer group" title="Toggle Space Soundscape" aria-label="Toggle Space Soundscape">
+          <!-- Play Icon -->
+          <svg id="play-icon" class="w-3.5 h-3.5 fill-current translate-x-0.5" viewBox="0 0 24 24">
+            <path d="M8 5v14l11-7z"/>
+          </svg>
+          <!-- Pause Icon (hidden by default) -->
+          <svg id="pause-icon" class="w-3.5 h-3.5 fill-current hidden" viewBox="0 0 24 24">
+            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
+          </svg>
+        </button>
+
+        <!-- Dynamic Animated Equalizer Bars -->
+        <div class="eq-container" id="footer-eq">
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+          <span class="eq-bar"></span>
+        </div>
+
+        <!-- Track / Atmosphere Metadata -->
+        <div class="flex flex-col pr-1">
+          <div class="flex items-center gap-2">
+            <span class="text-white font-medium text-xs tracking-tight">Space Soundscape</span>
+            <span id="soundscape-badge" class="text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-slate-400 uppercase tracking-wider font-semibold">Paused</span>
+          </div>
+          <span class="text-[10px] text-slate-500 font-sans tracking-wide">Deep Cosmic Drone & Solar Winds</span>
+        </div>
+
+        <!-- Volume Level Slider & Mute Toggle -->
+        <div class="hidden sm:flex items-center gap-2.5 pl-3 border-l border-white/10">
+          <button id="soundscape-mute-btn" class="text-slate-400 hover:text-white transition-colors focus:outline-none cursor-pointer" title="Mute/Unmute">
+            <svg id="volume-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+            </svg>
+            <svg id="volume-muted-icon" class="w-3.5 h-3.5 hidden text-coral" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/>
+            </svg>
+          </button>
+          <input id="soundscape-volume" type="range" min="0" max="1" step="0.05" value="0.4" class="w-14 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-cyanAccent" title="Volume Slider">
+        </div>
+
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- SCRIPT: THREE.JS 3D ACCENTS + GSAP SCROLL ANIMATIONS + CURSOR + MENU -->
+  <script>
+    (function() {
+      'use strict';
+
+      // ==========================================
+      // 1. MINIMAL CUSTOM CURSOR
+      // ==========================================
+      const dot = document.getElementById('cursor-point');
+      const ring = document.getElementById('cursor-follower');
+      let mX = window.innerWidth / 2, mY = window.innerHeight / 2;
+      let rX = mX, rY = mY;
+
+      window.addEventListener('mousemove', (e) => {
+        mX = e.clientX;
+        mY = e.clientY;
+        if (dot) {
+          dot.style.left = mX + 'px';
+          dot.style.top = mY + 'px';
+        }
+      });
+
+      function loopCursor() {
+        rX += (mX - rX) * 0.2;
+        rY += (mY - rY) * 0.2;
+        if (ring) {
+          ring.style.left = rX + 'px';
+          ring.style.top = rY + 'px';
+        }
+        requestAnimationFrame(loopCursor);
+      }
+      loopCursor();
+
+      document.querySelectorAll('a, button, label').forEach(el => {
+        el.addEventListener('mouseenter', () => ring && ring.classList.add('hovered'));
+        el.addEventListener('mouseleave', () => ring && ring.classList.remove('hovered'));
+      });
+
+      // ==========================================
+      // 2. FULLSCREEN MENU TOGGLE
+      // ==========================================
+      const openBtn = document.getElementById('open-menu-btn');
+      const closeBtn = document.getElementById('close-menu-btn');
+      const navOverlay = document.getElementById('nav-overlay');
+
+      function openNav() {
+        if (!navOverlay) return;
+        navOverlay.classList.remove('opacity-0', 'pointer-events-none');
+        navOverlay.classList.add('opacity-100', 'pointer-events-auto');
+        if (typeof gsap !== 'undefined') {
+          gsap.fromTo('.nav-item', { y: 30, opacity: 0 }, { y: 0, opacity: 1, duration: 0.4, stagger: 0.08, ease: 'power2.out' });
+        }
+      }
+
+      function closeNav() {
+        if (!navOverlay) return;
+        navOverlay.classList.remove('opacity-100', 'pointer-events-auto');
+        navOverlay.classList.add('opacity-0', 'pointer-events-none');
+      }
+
+      if (openBtn) openBtn.addEventListener('click', openNav);
+      if (closeBtn) closeBtn.addEventListener('click', closeNav);
+      document.querySelectorAll('.nav-item').forEach(item => item.addEventListener('click', closeNav));
+
+      // ==========================================
+      // 3. COPY EMAIL INTERACTION
+      // ==========================================
+      const copyBtn = document.getElementById('copy-email-btn');
+      const copyText = document.getElementById('copy-email-text');
+      if (copyBtn && copyText) {
+        copyBtn.addEventListener('click', () => {
+          navigator.clipboard.writeText('kushmitha259@gmail.com').then(() => {
+            copyText.textContent = '✓ Copied to Clipboard!';
+            setTimeout(() => { copyText.textContent = 'Copy Email Address'; }, 2500);
+          });
+        });
+      }
+
+      // Portrait Image Transparency & Background Removal Processor
+      const fileInput = document.getElementById('portrait-file-input');
+      const heroImg = document.getElementById('hero-portrait-img');
+      const svgRender = document.getElementById('portrait-svg-render');
+      const toggleTransBtn = document.getElementById('toggle-transparency-btn');
+      const transText = document.getElementById('transparency-status-text');
+      const transDot = document.getElementById('transparency-dot');
+
+      let isTransparentMode = true;
+
+      // Smart Background Remover (Turns black/dark background into true transparent PNG)
+      function makeImageTransparent(imgElement, callback) {
+        try {
+          const tempImg = new Image();
+          tempImg.crossOrigin = "anonymous";
+          tempImg.onload = function() {
+            const canvas = document.createElement('canvas');
+            const w = tempImg.naturalWidth || 600;
+            const h = tempImg.naturalHeight || 600;
+            canvas.width = w;
+            canvas.height = h;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(tempImg, 0, 0, w, h);
+
+            try {
+              const imgData = ctx.getImageData(0, 0, w, h);
+              const data = imgData.data;
+              const threshold = 32; // Darkness cut-off
+
+              // Boundary-aware alpha transparency
+              for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+                // Perceived luminance
+                const lum = r * 0.299 + g * 0.587 + b * 0.114;
+
+                if (lum < threshold) {
+                  // Smooth feathered alpha edge
+                  const alpha = lum < (threshold * 0.4) ? 0 : ((lum - threshold * 0.4) / (threshold * 0.6)) * 255;
+                  data[i + 3] = Math.min(data[i + 3], alpha);
+                }
+              }
+              ctx.putImageData(imgData, 0, 0);
+              const transparentUrl = canvas.toDataURL('image/png');
+              if (callback) callback(transparentUrl);
+            } catch (err) {
+              // Canvas tainted by cross-origin if local, CSS screen blend mode handles it automatically
+              if (callback) callback(tempImg.src);
+            }
+          };
+          tempImg.src = imgElement.src;
+        } catch(e) {
+          if (callback) callback(imgElement.src);
+        }
+      }
+
+      function updateTransparencyUI(transparent) {
+        isTransparentMode = transparent;
+        if (heroImg) {
+          if (transparent) {
+            heroImg.classList.add('portrait-transparent');
+          } else {
+            heroImg.classList.remove('portrait-transparent');
+          }
+        }
+        if (transText && transDot) {
+          if (transparent) {
+            transText.textContent = 'BG: Transparent';
+            transDot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-pulse';
+            toggleTransBtn.className = 'text-xs text-amber-300 hover:text-amber-200 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-3.5 py-3 rounded-xl flex items-center gap-2 transition-all cursor-pointer';
+          } else {
+            transText.textContent = 'BG: Solid (Natural)';
+            transDot.className = 'w-2 h-2 rounded-full bg-slate-500';
+            toggleTransBtn.className = 'text-xs text-slate-400 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 px-3.5 py-3 rounded-xl flex items-center gap-2 transition-all cursor-pointer';
+          }
+        }
+        try {
+          localStorage.setItem('hillory_transparency_mode', transparent ? '1' : '0');
+        } catch(e) {}
+      }
+
+      if (toggleTransBtn) {
+        toggleTransBtn.addEventListener('click', () => {
+          updateTransparencyUI(!isTransparentMode);
+        });
+      }
+
+      // Check for previously saved photo in localStorage
+      try {
+        const savedImg = localStorage.getItem('hillory_profile_image');
+        if (savedImg && heroImg) {
+          heroImg.src = savedImg;
+          heroImg.style.display = 'block';
+          if (svgRender) svgRender.style.display = 'none';
+        }
+        const savedMode = localStorage.getItem('hillory_transparency_mode');
+        if (savedMode !== null) {
+          updateTransparencyUI(savedMode === '1');
+        } else {
+          updateTransparencyUI(true);
+        }
+      } catch (e) {
+        // localStorage safety
+      }
+
+      // Automatically process transparent background once hero image loads
+      if (heroImg) {
+        heroImg.addEventListener('load', () => {
+          if (!heroImg.dataset.processed && isTransparentMode) {
+            heroImg.dataset.processed = "1";
+            makeImageTransparent(heroImg, (transparentUrl) => {
+              if (transparentUrl && transparentUrl !== heroImg.src) {
+                heroImg.src = transparentUrl;
+              }
+            });
+          }
+        });
+      }
+
+      function handleImageLoad(file) {
+        if (!file || !file.type.startsWith('image/')) return;
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const rawUrl = evt.target.result;
+          if (heroImg) {
+            heroImg.src = rawUrl;
+            heroImg.style.display = 'block';
+            heroImg.dataset.processed = "";
+            if (isTransparentMode) {
+              makeImageTransparent(heroImg, (transparentUrl) => {
+                heroImg.src = transparentUrl;
+                try {
+                  localStorage.setItem('hillory_profile_image', transparentUrl);
+                } catch(e) {}
+              });
+            } else {
+              try {
+                localStorage.setItem('hillory_profile_image', rawUrl);
+              } catch(e) {}
+            }
+          }
+          if (svgRender) svgRender.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+      }
+
+      if (fileInput) {
+        fileInput.addEventListener('change', (e) => {
+          handleImageLoad(e.target.files[0]);
+        });
+      }
+
+      // Drag and drop image file onto hero
+      window.addEventListener('dragover', (e) => e.preventDefault());
+      window.addEventListener('drop', (e) => {
+        e.preventDefault();
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+          handleImageLoad(e.dataTransfer.files[0]);
+        }
+      });
+
+      // ==========================================
+      // 3.5 MINIMAL AMBIENT SPACE SOUNDSCAPE SYNTHESIZER
+      // ==========================================
+      let audioCtx = null;
+      let isPlayingSoundscape = false;
+      let masterGain = null;
+      let soundNodes = [];
+      let lfoFilter = null;
+      let soundscapeVolume = 0.4;
+      let isMuted = false;
+
+      // UI Elements
+      const footerToggleBtn = document.getElementById('footer-soundscape-toggle');
+      const headerToggleBtn = document.getElementById('header-soundscape-btn');
+      const menuToggleBtn = document.getElementById('menu-soundscape-btn');
+      const playIcon = document.getElementById('play-icon');
+      const pauseIcon = document.getElementById('pause-icon');
+      const soundBadge = document.getElementById('soundscape-badge');
+      const headerLabel = document.getElementById('header-sound-label');
+      const menuSoundDot = document.getElementById('menu-sound-dot');
+      const menuSoundText = document.getElementById('menu-sound-text');
+      const volumeSlider = document.getElementById('soundscape-volume');
+      const muteBtn = document.getElementById('soundscape-mute-btn');
+      const volumeIcon = document.getElementById('volume-icon');
+      const volumeMutedIcon = document.getElementById('volume-muted-icon');
+
+      function initSpaceAudio() {
+        if (audioCtx) return;
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContextClass();
+
+        // Master Gain
+        masterGain = audioCtx.createGain();
+        masterGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
+        masterGain.connect(audioCtx.destination);
+      }
+
+      function buildSoundscapeGraph() {
+        if (!audioCtx) initSpaceAudio();
+        soundNodes.forEach(node => {
+          try { node.stop(); } catch(e) {}
+          try { node.disconnect(); } catch(e) {}
+        });
+        soundNodes = [];
+
+        const now = audioCtx.currentTime;
+
+        // 1. Cosmic Sub-Bass Drone (55Hz / A1 fundamental + 27.5Hz sub)
+        const subOsc = audioCtx.createOscillator();
+        subOsc.type = 'triangle';
+        subOsc.frequency.setValueAtTime(55, now);
+        
+        const subGain = audioCtx.createGain();
+        subGain.gain.setValueAtTime(0.35, now);
+        subOsc.connect(subGain);
+        subGain.connect(masterGain);
+        subOsc.start(now);
+        soundNodes.push(subOsc);
+
+        // Sub harmonic (27.5Hz)
+        const deepSub = audioCtx.createOscillator();
+        deepSub.type = 'sine';
+        deepSub.frequency.setValueAtTime(27.5, now);
+        const deepSubGain = audioCtx.createGain();
+        deepSubGain.gain.setValueAtTime(0.4, now);
+        deepSub.connect(deepSubGain);
+        deepSubGain.connect(masterGain);
+        deepSub.start(now);
+        soundNodes.push(deepSub);
+
+        // 2. Harmonic Celestial 5th Chords (110Hz A2, 164.81Hz E3, 220Hz A3)
+        const droneFrequencies = [110, 164.81, 220.0];
+        droneFrequencies.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq + (idx === 1 ? 0.35 : -0.25), now);
+
+          const droneGain = audioCtx.createGain();
+          droneGain.gain.setValueAtTime(0.18 / (idx + 1), now);
+
+          if (audioCtx.createStereoPanner) {
+            const panner = audioCtx.createStereoPanner();
+            panner.pan.setValueAtTime((idx - 1) * 0.45, now);
+            osc.connect(droneGain);
+            droneGain.connect(panner);
+            panner.connect(masterGain);
+          } else {
+            osc.connect(droneGain);
+            droneGain.connect(masterGain);
+          }
+          osc.start(now);
+          soundNodes.push(osc);
+        });
+
+        // 3. Solar Winds & Cosmic Noise (Filtered Pink/Brownian Noise Swell)
+        const bufferSize = audioCtx.sampleRate * 3;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        let lastOut = 0.0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          output[i] = (lastOut + (0.02 * white)) / 1.02;
+          lastOut = output[i];
+          output[i] *= 3.5;
+        }
+
+        const whiteNoise = audioCtx.createBufferSource();
+        whiteNoise.buffer = noiseBuffer;
+        whiteNoise.loop = true;
+
+        // Bandpass Filter modulated by gentle LFO (stellar breathing)
+        const bandpass = audioCtx.createBiquadFilter();
+        bandpass.type = 'bandpass';
+        bandpass.frequency.setValueAtTime(420, now);
+        bandpass.Q.setValueAtTime(3.2, now);
+        lfoFilter = bandpass;
+
+        // LFO for filter sweep (~12 sec breathing cycle)
+        const lfo = audioCtx.createOscillator();
+        lfo.type = 'sine';
+        lfo.frequency.setValueAtTime(0.08, now);
+        const lfoGain = audioCtx.createGain();
+        lfoGain.gain.setValueAtTime(260, now);
+        lfo.connect(lfoGain);
+        lfoGain.connect(bandpass.frequency);
+        lfo.start(now);
+        soundNodes.push(lfo);
+
+        const noiseGain = audioCtx.createGain();
+        noiseGain.gain.setValueAtTime(0.22, now);
+
+        whiteNoise.connect(bandpass);
+        bandpass.connect(noiseGain);
+        noiseGain.connect(masterGain);
+        whiteNoise.start(now);
+        soundNodes.push(whiteNoise);
+      }
+
+      function startSoundscape() {
+        if (!audioCtx) initSpaceAudio();
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        buildSoundscapeGraph();
+
+        const targetVol = isMuted ? 0.0001 : (soundscapeVolume * 0.7);
+        masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+        masterGain.gain.setValueAtTime(masterGain.gain.value || 0.0001, audioCtx.currentTime);
+        masterGain.gain.exponentialRampToValueAtTime(Math.max(0.0001, targetVol), audioCtx.currentTime + 1.2);
+
+        isPlayingSoundscape = true;
+        updateSoundscapeUI(true);
+      }
+
+      function stopSoundscape() {
+        if (!audioCtx || !masterGain) return;
+        masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+        masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
+        masterGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
+
+        setTimeout(() => {
+          soundNodes.forEach(node => {
+            try { node.stop(); } catch(e) {}
+            try { node.disconnect(); } catch(e) {}
+          });
+          soundNodes = [];
+        }, 900);
+
+        isPlayingSoundscape = false;
+        updateSoundscapeUI(false);
+      }
+
+      function toggleSoundscape() {
+        if (isPlayingSoundscape) {
+          stopSoundscape();
+        } else {
+          startSoundscape();
+        }
+      }
+
+      function updateSoundscapeUI(active) {
+        if (active) {
+          document.body.classList.add('soundscape-active');
+          if (playIcon) playIcon.classList.add('hidden');
+          if (pauseIcon) pauseIcon.classList.remove('hidden');
+          if (soundBadge) {
+            soundBadge.textContent = 'Active';
+            soundBadge.className = 'text-[9px] px-1.5 py-0.5 rounded bg-cyanAccent/20 text-cyanAccent uppercase tracking-wider font-semibold';
+          }
+          if (headerLabel) {
+            headerLabel.textContent = 'Audio: On';
+            headerLabel.className = 'hidden sm:inline text-[11px] text-cyanAccent font-medium';
+          }
+          if (menuSoundText) menuSoundText.textContent = 'Soundscape: Active';
+          if (menuSoundDot) menuSoundDot.className = 'w-1.5 h-1.5 rounded-full bg-cyanAccent animate-pulse';
+        } else {
+          document.body.classList.remove('soundscape-active');
+          if (playIcon) playIcon.classList.remove('hidden');
+          if (pauseIcon) pauseIcon.classList.add('hidden');
+          if (soundBadge) {
+            soundBadge.textContent = 'Paused';
+            soundBadge.className = 'text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-slate-400 uppercase tracking-wider font-semibold';
+          }
+          if (headerLabel) {
+            headerLabel.textContent = 'Audio: Off';
+            headerLabel.className = 'hidden sm:inline text-[11px] text-slate-400';
+          }
+          if (menuSoundText) menuSoundText.textContent = 'Soundscape: Off';
+          if (menuSoundDot) menuSoundDot.className = 'w-1.5 h-1.5 rounded-full bg-slate-500';
+        }
+      }
+
+      if (footerToggleBtn) footerToggleBtn.addEventListener('click', toggleSoundscape);
+      if (headerToggleBtn) headerToggleBtn.addEventListener('click', toggleSoundscape);
+      if (menuToggleBtn) menuToggleBtn.addEventListener('click', toggleSoundscape);
+
+      if (volumeSlider) {
+        volumeSlider.addEventListener('input', (e) => {
+          soundscapeVolume = parseFloat(e.target.value);
+          if (isMuted && soundscapeVolume > 0) {
+            isMuted = false;
+            if (volumeIcon) volumeIcon.classList.remove('hidden');
+            if (volumeMutedIcon) volumeMutedIcon.classList.add('hidden');
+          }
+          if (masterGain && isPlayingSoundscape && !isMuted) {
+            masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+            masterGain.gain.linearRampToValueAtTime(Math.max(0.0001, soundscapeVolume * 0.7), audioCtx.currentTime + 0.1);
+          }
+        });
+      }
+
+      if (muteBtn) {
+        muteBtn.addEventListener('click', () => {
+          isMuted = !isMuted;
+          if (isMuted) {
+            if (volumeIcon) volumeIcon.classList.add('hidden');
+            if (volumeMutedIcon) volumeMutedIcon.classList.remove('hidden');
+            if (masterGain && audioCtx) {
+              masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+              masterGain.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
+            }
+          } else {
+            if (volumeIcon) volumeIcon.classList.remove('hidden');
+            if (volumeMutedIcon) volumeMutedIcon.classList.add('hidden');
+            if (masterGain && audioCtx && isPlayingSoundscape) {
+              masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
+              masterGain.gain.linearRampToValueAtTime(Math.max(0.0001, soundscapeVolume * 0.7), audioCtx.currentTime + 0.1);
+            }
+          }
+        });
+      }
+
+      // Dynamic celestial frequency shift connected to mouse height
+      window.addEventListener('mousemove', (e) => {
+        if (isPlayingSoundscape && lfoFilter && audioCtx) {
+          const normY = 1 - (e.clientY / window.innerHeight);
+          const dynamicFreq = 300 + (normY * 420);
+          lfoFilter.frequency.setTargetAtTime(dynamicFreq, audioCtx.currentTime, 0.4);
+        }
+      });
+
+      // ==========================================
+      // 4. THREE.JS 3D SCENE (Minimalist Floating Elements from Reference Image)
+      // ==========================================
+      const canvas = document.getElementById('webgl-canvas');
+      const scene = new THREE.Scene();
+
+      const camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 0, 30);
+
+      const renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        alpha: true,
+        antialias: true
+      });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Lighting (Cyan + Coral + Warm Golden Amber Rim Matching Gemini_Generated_Image_v1tufrv1tufrv1tu.jpg)
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+
+      const lightCyan = new THREE.PointLight(0x00d2ff, 1.8, 50);
+      lightCyan.position.set(12, 10, 15);
+      scene.add(lightCyan);
+
+      const lightCoral = new THREE.PointLight(0xe05347, 1.5, 50);
+      lightCoral.position.set(-12, -10, 10);
+      scene.add(lightCoral);
+
+      // Warm Amber Golden Rim Light in 3D Space (matches golden rim lighting on portrait)
+      const lightAmberGlow = new THREE.PointLight(0xf59e0b, 2.2, 35);
+      lightAmberGlow.position.set(0, 0, -2);
+      scene.add(lightAmberGlow);
+
+      // Group for top-right floating rings & sphere (Matching reference design)
+      const accentGroup = new THREE.Group();
+      scene.add(accentGroup);
+
+      // Ring 1: Cyan Thin Ring
+      const ring1Geo = new THREE.TorusGeometry(3.5, 0.12, 16, 100);
+      const ring1Mat = new THREE.MeshBasicMaterial({ color: 0x00d2ff, transparent: true, opacity: 0.85 });
+      const ring1 = new THREE.Mesh(ring1Geo, ring1Mat);
+      ring1.position.set(9, 7, 0);
+      accentGroup.add(ring1);
+
+      // Ring 2: Coral Smaller Intersecting Ring
+      const ring2Geo = new THREE.TorusGeometry(1.2, 0.1, 16, 60);
+      const ring2Mat = new THREE.MeshBasicMaterial({ color: 0xe05347, transparent: true, opacity: 0.9 });
+      const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
+      ring2.position.set(11.2, 8.8, 1);
+      accentGroup.add(ring2);
+
+      // Sphere: Cyan Floating Disc / Node
+      const dotGeo = new THREE.SphereGeometry(0.8, 32, 32);
+      const dotMat = new THREE.MeshBasicMaterial({ color: 0x00d2ff });
+      const dotMesh = new THREE.Mesh(dotGeo, dotMat);
+      dotMesh.position.set(13, 4, 2);
+      accentGroup.add(dotMesh);
+
+      // Ambient Minimal Star Dust (Pure black background with subtle micro particles)
+      const starCount = 350;
+      const starGeo = new THREE.BufferGeometry();
+      const starPos = new Float32Array(starCount * 3);
+
+      for (let i = 0; i < starCount * 3; i += 3) {
+        starPos[i] = (Math.random() - 0.5) * 80;
+        starPos[i + 1] = (Math.random() - 0.5) * 80;
+        starPos[i + 2] = (Math.random() - 0.5) * 60 - 10;
+      }
+      starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+
+      const starMat = new THREE.PointsMaterial({
+        size: 0.25,
+        color: 0xffffff,
+        transparent: true,
+        opacity: 0.25
+      });
+      const stars = new THREE.Points(starGeo, starMat);
+      scene.add(stars);
+
+      // Depth Particles Behind Transparent Portrait (Shining directly through transparent background)
+      const auraCount = 200;
+      const auraGeo = new THREE.BufferGeometry();
+      const auraPos = new Float32Array(auraCount * 3);
+      const auraColors = new Float32Array(auraCount * 3);
+
+      for (let i = 0; i < auraCount * 3; i += 3) {
+        // Centered directly behind the portrait silhouette (x: -12 to 12, y: -6 to 12, z: -2 to -10)
+        auraPos[i] = (Math.random() - 0.5) * 24;
+        auraPos[i + 1] = (Math.random() - 0.5) * 20 + 2;
+        auraPos[i + 2] = -2 - Math.random() * 8;
+
+        // Warm amber / coral / cyan sparkles
+        const randChoice = Math.random();
+        if (randChoice < 0.6) {
+          // Warm Golden Amber (Matches rim lighting)
+          auraColors[i] = 0.96;
+          auraColors[i + 1] = 0.62;
+          auraColors[i + 2] = 0.04;
+        } else if (randChoice < 0.85) {
+          // Cyan Accent
+          auraColors[i] = 0.0;
+          auraColors[i + 1] = 0.82;
+          auraColors[i + 2] = 1.0;
+        } else {
+          // Coral
+          auraColors[i] = 0.88;
+          auraColors[i + 1] = 0.33;
+          auraColors[i + 2] = 0.28;
+        }
+      }
+      auraGeo.setAttribute('position', new THREE.BufferAttribute(auraPos, 3));
+      auraGeo.setAttribute('color', new THREE.BufferAttribute(auraColors, 3));
+
+      const auraMat = new THREE.PointsMaterial({
+        size: 0.45,
+        vertexColors: true,
+        transparent: true,
+        opacity: 0.75,
+        blending: THREE.AdditiveBlending
+      });
+      const auraParticles = new THREE.Points(auraGeo, auraMat);
+      scene.add(auraParticles);
+
+      // Mouse Parallax
+      let mouseXNorm = 0, mouseYNorm = 0;
+      let targetRotX = 0, targetRotY = 0;
+
+      window.addEventListener('mousemove', (e) => {
+        mouseXNorm = (e.clientX / window.innerWidth) * 2 - 1;
+        mouseYNorm = -(e.clientY / window.innerHeight) * 2 + 1;
+      });
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      // Render Loop
+      let clock = new THREE.Clock();
+
+      function animate() {
+        const t = clock.getElapsedTime();
+
+        // Parallax Lerp
+        targetRotX += (mouseYNorm * 0.15 - targetRotX) * 0.05;
+        targetRotY += (mouseXNorm * 0.2 - targetRotY) * 0.05;
+
+        accentGroup.rotation.x = targetRotX + Math.sin(t * 0.5) * 0.08;
+        accentGroup.rotation.y = targetRotY + Math.cos(t * 0.5) * 0.08;
+
+        ring1.rotation.z = t * 0.15;
+        ring2.rotation.x = t * 0.2;
+        dotMesh.position.y = 4 + Math.sin(t * 1.2) * 0.3;
+
+        stars.rotation.y = t * 0.01;
+        auraParticles.rotation.y = t * 0.04 + mouseXNorm * 0.08;
+        auraParticles.rotation.x = Math.sin(t * 0.6) * 0.04 - mouseYNorm * 0.08;
+
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+      }
+      animate();
+
+      // ==========================================
+      // 5. GSAP SCROLLTRIGGER
+      // ==========================================
+      if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+
+        gsap.from('#hero h1, #hero p, #hero a, #hero button', {
+          y: 30,
+          opacity: 0,
+          duration: 0.9,
+          stagger: 0.1,
+          ease: 'power3.out'
+        });
+
+        document.querySelectorAll('section:not(#hero)').forEach(sec => {
+          gsap.from(sec.querySelectorAll('h2, .minimal-card'), {
+            scrollTrigger: {
+              trigger: sec,
+              start: 'top 85%'
+            },
+            y: 35,
+            opacity: 0,
+            duration: 0.7,
+            stagger: 0.12,
+            ease: 'power2.out'
+          });
+        });
+      }
+
+    })();
+  </script>
+</body>
+</html>
