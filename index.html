@@ -92,57 +92,6 @@
       background: transparent !important;
     }
 
-    /* Soundscape Equalizer Animation */
-    .eq-container {
-      display: flex;
-      align-items: flex-end;
-      gap: 2.5px;
-      height: 16px;
-    }
-    .eq-bar {
-      width: 2.5px;
-      height: 4px;
-      background: #71717a;
-      border-radius: 1px;
-      transition: height 0.25s ease, background-color 0.25s ease;
-    }
-    .soundscape-active .eq-bar {
-      background: #00d2ff;
-    }
-    .soundscape-active .eq-bar:nth-child(1) {
-      animation: eqBounce1 1.2s ease-in-out infinite alternate;
-    }
-    .soundscape-active .eq-bar:nth-child(2) {
-      animation: eqBounce2 0.85s ease-in-out infinite alternate 0.15s;
-    }
-    .soundscape-active .eq-bar:nth-child(3) {
-      animation: eqBounce3 1.4s ease-in-out infinite alternate 0.3s;
-    }
-    .soundscape-active .eq-bar:nth-child(4) {
-      animation: eqBounce4 0.95s ease-in-out infinite alternate 0.1s;
-    }
-
-    @keyframes eqBounce1 {
-      0% { height: 4px; background: #00d2ff; }
-      50% { height: 14px; background: #e05347; }
-      100% { height: 6px; background: #f59e0b; }
-    }
-    @keyframes eqBounce2 {
-      0% { height: 12px; background: #e05347; }
-      50% { height: 5px; background: #00d2ff; }
-      100% { height: 16px; background: #38bdf8; }
-    }
-    @keyframes eqBounce3 {
-      0% { height: 5px; background: #f59e0b; }
-      50% { height: 16px; background: #00d2ff; }
-      100% { height: 9px; background: #e05347; }
-    }
-    @keyframes eqBounce4 {
-      0% { height: 14px; background: #38bdf8; }
-      50% { height: 4px; background: #f59e0b; }
-      100% { height: 11px; background: #00d2ff; }
-    }
-
     /* Subtle Minimalist Card */
     .minimal-card {
       background: rgba(14, 15, 20, 0.6);
@@ -279,13 +228,7 @@
     </nav>
 
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-6 border-t border-white/10 text-xs font-mono text-slate-400">
-      <div class="flex items-center gap-4 flex-wrap">
-        <div>kushmitha259@gmail.com · +94 74 328 9435</div>
-        <button id="menu-soundscape-btn" class="flex items-center gap-2 px-2.5 py-1 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-[11px] text-slate-300 transition-colors cursor-pointer" title="Toggle Space Soundscape">
-          <span class="w-1.5 h-1.5 rounded-full bg-slate-500" id="menu-sound-dot"></span>
-          <span id="menu-sound-text">Soundscape: Off</span>
-        </button>
-      </div>
+      <div>kushmitha259@gmail.com · +94 74 328 9435</div>
       <div class="flex gap-6">
         <a href="https://github.com/juniorhillory-creator" target="_blank" rel="noopener noreferrer" class="hover:text-coral transition-colors">GitHub</a>
         <a href="https://www.linkedin.com/in/Contact-Hillory-Kushmitha" target="_blank" rel="noopener noreferrer" class="hover:text-coral transition-colors">LinkedIn</a>
@@ -330,22 +273,11 @@
         </a>
       </nav>
 
-      <!-- Direct Email & Soundscape Toggle in Top Bar -->
+      <!-- Direct Email in Top Bar -->
       <div class="flex items-center gap-3 md:gap-5">
         <a href="mailto:kushmitha259@gmail.com" class="hidden md:block text-xs md:text-sm text-slate-300 hover:text-white transition-colors font-sans tracking-wide">
           kushmitha259@gmail.com
         </a>
-
-        <!-- Header Minimal Soundscape Toggle -->
-        <button id="header-soundscape-btn" class="flex items-center gap-2 px-3 py-1.5 rounded-full border border-white/10 hover:border-cyanAccent/40 bg-white/[0.03] hover:bg-white/[0.08] text-xs font-mono text-slate-300 transition-all cursor-pointer" title="Toggle Ambient Space Soundscape">
-          <div class="eq-container" id="header-eq">
-            <span class="eq-bar"></span>
-            <span class="eq-bar"></span>
-            <span class="eq-bar"></span>
-            <span class="eq-bar"></span>
-          </div>
-          <span id="header-sound-label" class="hidden sm:inline text-[11px] text-slate-400">Audio: Off</span>
-        </button>
 
         <!-- Hamburger Menu Icon (3 sleek horizontal lines) -->
         <button id="open-menu-btn" class="flex flex-col justify-center items-end gap-1.5 w-8 h-8 group focus:outline-none" aria-label="Open Navigation">
@@ -992,7 +924,7 @@
 
   </main>
 
-  <!-- MINIMAL FOOTER WITH AMBIENT SPACE SOUNDSCAPE PLAYER -->
+  <!-- FOOTER -->
   <footer class="border-t border-white/5 py-10 px-6 md:px-14 text-xs font-mono text-slate-500">
     <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-6">
       
@@ -1004,54 +936,6 @@
           <a href="https://github.com/juniorhillory-creator" target="_blank" rel="noopener noreferrer" class="hover:text-slate-300 transition-colors">GitHub</a>
           <a href="https://www.linkedin.com/in/Contact-Hillory-Kushmitha" target="_blank" rel="noopener noreferrer" class="hover:text-slate-300 transition-colors">LinkedIn</a>
         </div>
-      </div>
-
-      <!-- AMBIENT SPACE SOUNDSCAPE AUDIO PLAYER -->
-      <div id="footer-soundscape-container" class="flex items-center gap-4 py-2.5 px-5 rounded-2xl bg-white/[0.03] hover:bg-white/[0.05] border border-white/10 hover:border-cyanAccent/30 backdrop-blur-md transition-all duration-300 shadow-lg shadow-black/40">
-        
-        <!-- Play / Pause Action Button -->
-        <button id="footer-soundscape-toggle" class="flex items-center justify-center w-8 h-8 rounded-full bg-white/10 hover:bg-coral text-white transition-all duration-300 focus:outline-none cursor-pointer group" title="Toggle Space Soundscape" aria-label="Toggle Space Soundscape">
-          <!-- Play Icon -->
-          <svg id="play-icon" class="w-3.5 h-3.5 fill-current translate-x-0.5" viewBox="0 0 24 24">
-            <path d="M8 5v14l11-7z"/>
-          </svg>
-          <!-- Pause Icon (hidden by default) -->
-          <svg id="pause-icon" class="w-3.5 h-3.5 fill-current hidden" viewBox="0 0 24 24">
-            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-          </svg>
-        </button>
-
-        <!-- Dynamic Animated Equalizer Bars -->
-        <div class="eq-container" id="footer-eq">
-          <span class="eq-bar"></span>
-          <span class="eq-bar"></span>
-          <span class="eq-bar"></span>
-          <span class="eq-bar"></span>
-        </div>
-
-        <!-- Track / Atmosphere Metadata -->
-        <div class="flex flex-col pr-1">
-          <div class="flex items-center gap-2">
-            <span class="text-white font-medium text-xs tracking-tight">Space Soundscape</span>
-            <span id="soundscape-badge" class="text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-slate-400 uppercase tracking-wider font-semibold">Paused</span>
-          </div>
-          <span class="text-[10px] text-slate-500 font-sans tracking-wide">Deep Cosmic Drone & Solar Winds</span>
-        </div>
-
-        <!-- Volume Level Slider & Mute Toggle -->
-        <div class="hidden sm:flex items-center gap-2.5 pl-3 border-l border-white/10">
-          <button id="soundscape-mute-btn" class="text-slate-400 hover:text-white transition-colors focus:outline-none cursor-pointer" title="Mute/Unmute">
-            <svg id="volume-icon" class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
-            </svg>
-            <svg id="volume-muted-icon" class="w-3.5 h-3.5 hidden text-coral" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"/>
-            </svg>
-          </button>
-          <input id="soundscape-volume" type="range" min="0" max="1" step="0.05" value="0.4" class="w-14 h-1 bg-white/20 rounded-lg appearance-none cursor-pointer accent-cyanAccent" title="Volume Slider">
-        </div>
-
       </div>
 
     </div>
@@ -1330,267 +1214,6 @@
       });
 
       // ==========================================
-      // 3.5 MINIMAL AMBIENT SPACE SOUNDSCAPE SYNTHESIZER
-      // ==========================================
-      let audioCtx = null;
-      let isPlayingSoundscape = false;
-      let masterGain = null;
-      let soundNodes = [];
-      let lfoFilter = null;
-      let soundscapeVolume = 0.4;
-      let isMuted = false;
-
-      // UI Elements
-      const footerToggleBtn = document.getElementById('footer-soundscape-toggle');
-      const headerToggleBtn = document.getElementById('header-soundscape-btn');
-      const menuToggleBtn = document.getElementById('menu-soundscape-btn');
-      const playIcon = document.getElementById('play-icon');
-      const pauseIcon = document.getElementById('pause-icon');
-      const soundBadge = document.getElementById('soundscape-badge');
-      const headerLabel = document.getElementById('header-sound-label');
-      const menuSoundDot = document.getElementById('menu-sound-dot');
-      const menuSoundText = document.getElementById('menu-sound-text');
-      const volumeSlider = document.getElementById('soundscape-volume');
-      const muteBtn = document.getElementById('soundscape-mute-btn');
-      const volumeIcon = document.getElementById('volume-icon');
-      const volumeMutedIcon = document.getElementById('volume-muted-icon');
-
-      function initSpaceAudio() {
-        if (audioCtx) return;
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        audioCtx = new AudioContextClass();
-
-        // Master Gain
-        masterGain = audioCtx.createGain();
-        masterGain.gain.setValueAtTime(0.0001, audioCtx.currentTime);
-        masterGain.connect(audioCtx.destination);
-      }
-
-      function buildSoundscapeGraph() {
-        if (!audioCtx) initSpaceAudio();
-        soundNodes.forEach(node => {
-          try { node.stop(); } catch(e) {}
-          try { node.disconnect(); } catch(e) {}
-        });
-        soundNodes = [];
-
-        const now = audioCtx.currentTime;
-
-        // 1. Cosmic Sub-Bass Drone (55Hz / A1 fundamental + 27.5Hz sub)
-        const subOsc = audioCtx.createOscillator();
-        subOsc.type = 'triangle';
-        subOsc.frequency.setValueAtTime(55, now);
-        
-        const subGain = audioCtx.createGain();
-        subGain.gain.setValueAtTime(0.35, now);
-        subOsc.connect(subGain);
-        subGain.connect(masterGain);
-        subOsc.start(now);
-        soundNodes.push(subOsc);
-
-        // Sub harmonic (27.5Hz)
-        const deepSub = audioCtx.createOscillator();
-        deepSub.type = 'sine';
-        deepSub.frequency.setValueAtTime(27.5, now);
-        const deepSubGain = audioCtx.createGain();
-        deepSubGain.gain.setValueAtTime(0.4, now);
-        deepSub.connect(deepSubGain);
-        deepSubGain.connect(masterGain);
-        deepSub.start(now);
-        soundNodes.push(deepSub);
-
-        // 2. Harmonic Celestial 5th Chords (110Hz A2, 164.81Hz E3, 220Hz A3)
-        const droneFrequencies = [110, 164.81, 220.0];
-        droneFrequencies.forEach((freq, idx) => {
-          const osc = audioCtx.createOscillator();
-          osc.type = 'sine';
-          osc.frequency.setValueAtTime(freq + (idx === 1 ? 0.35 : -0.25), now);
-
-          const droneGain = audioCtx.createGain();
-          droneGain.gain.setValueAtTime(0.18 / (idx + 1), now);
-
-          if (audioCtx.createStereoPanner) {
-            const panner = audioCtx.createStereoPanner();
-            panner.pan.setValueAtTime((idx - 1) * 0.45, now);
-            osc.connect(droneGain);
-            droneGain.connect(panner);
-            panner.connect(masterGain);
-          } else {
-            osc.connect(droneGain);
-            droneGain.connect(masterGain);
-          }
-          osc.start(now);
-          soundNodes.push(osc);
-        });
-
-        // 3. Solar Winds & Cosmic Noise (Filtered Pink/Brownian Noise Swell)
-        const bufferSize = audioCtx.sampleRate * 3;
-        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-        const output = noiseBuffer.getChannelData(0);
-        let lastOut = 0.0;
-        for (let i = 0; i < bufferSize; i++) {
-          const white = Math.random() * 2 - 1;
-          output[i] = (lastOut + (0.02 * white)) / 1.02;
-          lastOut = output[i];
-          output[i] *= 3.5;
-        }
-
-        const whiteNoise = audioCtx.createBufferSource();
-        whiteNoise.buffer = noiseBuffer;
-        whiteNoise.loop = true;
-
-        // Bandpass Filter modulated by gentle LFO (stellar breathing)
-        const bandpass = audioCtx.createBiquadFilter();
-        bandpass.type = 'bandpass';
-        bandpass.frequency.setValueAtTime(420, now);
-        bandpass.Q.setValueAtTime(3.2, now);
-        lfoFilter = bandpass;
-
-        // LFO for filter sweep (~12 sec breathing cycle)
-        const lfo = audioCtx.createOscillator();
-        lfo.type = 'sine';
-        lfo.frequency.setValueAtTime(0.08, now);
-        const lfoGain = audioCtx.createGain();
-        lfoGain.gain.setValueAtTime(260, now);
-        lfo.connect(lfoGain);
-        lfoGain.connect(bandpass.frequency);
-        lfo.start(now);
-        soundNodes.push(lfo);
-
-        const noiseGain = audioCtx.createGain();
-        noiseGain.gain.setValueAtTime(0.22, now);
-
-        whiteNoise.connect(bandpass);
-        bandpass.connect(noiseGain);
-        noiseGain.connect(masterGain);
-        whiteNoise.start(now);
-        soundNodes.push(whiteNoise);
-      }
-
-      function startSoundscape() {
-        if (!audioCtx) initSpaceAudio();
-        if (audioCtx.state === 'suspended') {
-          audioCtx.resume();
-        }
-        buildSoundscapeGraph();
-
-        const targetVol = isMuted ? 0.0001 : (soundscapeVolume * 0.7);
-        masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-        masterGain.gain.setValueAtTime(masterGain.gain.value || 0.0001, audioCtx.currentTime);
-        masterGain.gain.exponentialRampToValueAtTime(Math.max(0.0001, targetVol), audioCtx.currentTime + 1.2);
-
-        isPlayingSoundscape = true;
-        updateSoundscapeUI(true);
-      }
-
-      function stopSoundscape() {
-        if (!audioCtx || !masterGain) return;
-        masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-        masterGain.gain.setValueAtTime(masterGain.gain.value, audioCtx.currentTime);
-        masterGain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + 0.8);
-
-        setTimeout(() => {
-          soundNodes.forEach(node => {
-            try { node.stop(); } catch(e) {}
-            try { node.disconnect(); } catch(e) {}
-          });
-          soundNodes = [];
-        }, 900);
-
-        isPlayingSoundscape = false;
-        updateSoundscapeUI(false);
-      }
-
-      function toggleSoundscape() {
-        if (isPlayingSoundscape) {
-          stopSoundscape();
-        } else {
-          startSoundscape();
-        }
-      }
-
-      function updateSoundscapeUI(active) {
-        if (active) {
-          document.body.classList.add('soundscape-active');
-          if (playIcon) playIcon.classList.add('hidden');
-          if (pauseIcon) pauseIcon.classList.remove('hidden');
-          if (soundBadge) {
-            soundBadge.textContent = 'Active';
-            soundBadge.className = 'text-[9px] px-1.5 py-0.5 rounded bg-cyanAccent/20 text-cyanAccent uppercase tracking-wider font-semibold';
-          }
-          if (headerLabel) {
-            headerLabel.textContent = 'Audio: On';
-            headerLabel.className = 'hidden sm:inline text-[11px] text-cyanAccent font-medium';
-          }
-          if (menuSoundText) menuSoundText.textContent = 'Soundscape: Active';
-          if (menuSoundDot) menuSoundDot.className = 'w-1.5 h-1.5 rounded-full bg-cyanAccent animate-pulse';
-        } else {
-          document.body.classList.remove('soundscape-active');
-          if (playIcon) playIcon.classList.remove('hidden');
-          if (pauseIcon) pauseIcon.classList.add('hidden');
-          if (soundBadge) {
-            soundBadge.textContent = 'Paused';
-            soundBadge.className = 'text-[9px] px-1.5 py-0.5 rounded bg-white/10 text-slate-400 uppercase tracking-wider font-semibold';
-          }
-          if (headerLabel) {
-            headerLabel.textContent = 'Audio: Off';
-            headerLabel.className = 'hidden sm:inline text-[11px] text-slate-400';
-          }
-          if (menuSoundText) menuSoundText.textContent = 'Soundscape: Off';
-          if (menuSoundDot) menuSoundDot.className = 'w-1.5 h-1.5 rounded-full bg-slate-500';
-        }
-      }
-
-      if (footerToggleBtn) footerToggleBtn.addEventListener('click', toggleSoundscape);
-      if (headerToggleBtn) headerToggleBtn.addEventListener('click', toggleSoundscape);
-      if (menuToggleBtn) menuToggleBtn.addEventListener('click', toggleSoundscape);
-
-      if (volumeSlider) {
-        volumeSlider.addEventListener('input', (e) => {
-          soundscapeVolume = parseFloat(e.target.value);
-          if (isMuted && soundscapeVolume > 0) {
-            isMuted = false;
-            if (volumeIcon) volumeIcon.classList.remove('hidden');
-            if (volumeMutedIcon) volumeMutedIcon.classList.add('hidden');
-          }
-          if (masterGain && isPlayingSoundscape && !isMuted) {
-            masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-            masterGain.gain.linearRampToValueAtTime(Math.max(0.0001, soundscapeVolume * 0.7), audioCtx.currentTime + 0.1);
-          }
-        });
-      }
-
-      if (muteBtn) {
-        muteBtn.addEventListener('click', () => {
-          isMuted = !isMuted;
-          if (isMuted) {
-            if (volumeIcon) volumeIcon.classList.add('hidden');
-            if (volumeMutedIcon) volumeMutedIcon.classList.remove('hidden');
-            if (masterGain && audioCtx) {
-              masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-              masterGain.gain.linearRampToValueAtTime(0.0001, audioCtx.currentTime + 0.1);
-            }
-          } else {
-            if (volumeIcon) volumeIcon.classList.remove('hidden');
-            if (volumeMutedIcon) volumeMutedIcon.classList.add('hidden');
-            if (masterGain && audioCtx && isPlayingSoundscape) {
-              masterGain.gain.cancelScheduledValues(audioCtx.currentTime);
-              masterGain.gain.linearRampToValueAtTime(Math.max(0.0001, soundscapeVolume * 0.7), audioCtx.currentTime + 0.1);
-            }
-          }
-        });
-      }
-
-      // Dynamic celestial frequency shift connected to mouse height
-      window.addEventListener('mousemove', (e) => {
-        if (isPlayingSoundscape && lfoFilter && audioCtx) {
-          const normY = 1 - (e.clientY / window.innerHeight);
-          const dynamicFreq = 300 + (normY * 420);
-          lfoFilter.frequency.setTargetAtTime(dynamicFreq, audioCtx.currentTime, 0.4);
-        }
-      });
-
-      // ==========================================
       // 4. THREE.JS 3D SCENE (Minimalist Floating Elements from Reference Image)
       // ==========================================
       const canvas = document.getElementById('webgl-canvas');
@@ -1679,6 +1302,7 @@
         starPos[i + 2] = -15 - Math.random() * 45;
       }
       starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+      starGeo.computeBoundingSphere();
 
       const starMat = new THREE.PointsMaterial({
         size: 0.35,
@@ -1701,7 +1325,8 @@
       const phases = new Float32Array(fieldCount);
       const speeds = new Float32Array(fieldCount);
 
-      const aspect = window.innerWidth / window.innerHeight;
+      const rawAspect = (window.innerHeight > 0) ? (window.innerWidth / window.innerHeight) : (16 / 9);
+      const aspect = (Number.isFinite(rawAspect) && rawAspect > 0) ? rawAspect : (16 / 9);
       const spanX = Math.max(aspect * 24, 28);
       const spanY = 22;
 
@@ -1720,13 +1345,13 @@
           z = (Math.random() - 0.5) * 20 - 2;
         }
 
-        fieldPos[i3] = x;
-        fieldPos[i3 + 1] = y;
-        fieldPos[i3 + 2] = z;
+        fieldPos[i3] = Number.isFinite(x) ? x : 0;
+        fieldPos[i3 + 1] = Number.isFinite(y) ? y : 0;
+        fieldPos[i3 + 2] = Number.isFinite(z) ? z : 0;
 
-        basePos[i3] = x;
-        basePos[i3 + 1] = y;
-        basePos[i3 + 2] = z;
+        basePos[i3] = fieldPos[i3];
+        basePos[i3 + 1] = fieldPos[i3 + 1];
+        basePos[i3 + 2] = fieldPos[i3 + 2];
 
         velocities[i3] = 0;
         velocities[i3 + 1] = 0;
@@ -1762,6 +1387,7 @@
 
       fieldGeo.setAttribute('position', new THREE.BufferAttribute(fieldPos, 3));
       fieldGeo.setAttribute('color', new THREE.BufferAttribute(fieldColors, 3));
+      fieldGeo.computeBoundingSphere();
 
       const fieldMat = new THREE.PointsMaterial({
         size: 0.65,
@@ -1793,8 +1419,10 @@
       let shockwaveOrigin = new THREE.Vector3();
 
       window.addEventListener('mousemove', (e) => {
-        mouseXNorm = (e.clientX / window.innerWidth) * 2 - 1;
-        mouseYNorm = -(e.clientY / window.innerHeight) * 2 + 1;
+        const w = window.innerWidth || 1;
+        const h = window.innerHeight || 1;
+        mouseXNorm = (e.clientX / w) * 2 - 1;
+        mouseYNorm = -(e.clientY / h) * 2 + 1;
         mouseNDC.x = mouseXNorm;
         mouseNDC.y = mouseYNorm;
         isMouseInside = true;
@@ -1805,7 +1433,7 @@
       });
 
       window.addEventListener('click', (e) => {
-        if (isMouseInside) {
+        if (isMouseInside && Number.isFinite(cursorWorld.x) && Number.isFinite(cursorWorld.y)) {
           shockwaveActive = true;
           shockwaveRadius = 0.5;
           shockwaveOrigin.copy(cursorWorld);
@@ -1813,16 +1441,22 @@
       });
 
       window.addEventListener('resize', () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
+        const w = Math.max(window.innerWidth || 0, 1);
+        const h = Math.max(window.innerHeight || 0, 1);
+        camera.aspect = w / h;
         camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setSize(w, h);
 
-        // Re-scale boundary positions slightly if aspect ratio changes significantly
-        const newAspect = window.innerWidth / window.innerHeight;
-        const newSpanX = Math.max(newAspect * 24, 28);
+        // Re-scale boundary positions safely if aspect ratio changes
+        const newAspect = w / h;
+        const validAspect = (Number.isFinite(newAspect) && newAspect > 0) ? newAspect : (16 / 9);
+        const newSpanX = Math.max(validAspect * 24, 28);
         for (let i = Math.floor(fieldCount * 0.3); i < fieldCount; i++) {
           const i3 = i * 3;
-          basePos[i3] = (Math.random() - 0.5) * newSpanX * 2;
+          const val = (Math.random() - 0.5) * newSpanX * 2;
+          if (Number.isFinite(val)) {
+            basePos[i3] = val;
+          }
         }
       });
 
@@ -1835,11 +1469,16 @@
         const positions = posAttr.array;
 
         // Project cursor into 3D world space
-        if (isMouseInside) {
+        if (isMouseInside && Number.isFinite(mouseNDC.x) && Number.isFinite(mouseNDC.y)) {
           raycaster.setFromCamera(mouseNDC, camera);
-          raycaster.ray.intersectPlane(refPlane, targetCursorWorld);
+          const hit = raycaster.ray.intersectPlane(refPlane, targetCursorWorld);
+          if (!hit) {
+            targetCursorWorld.set(0, 0, 0);
+          }
         }
-        cursorWorld.lerp(targetCursorWorld, 0.16);
+        if (Number.isFinite(targetCursorWorld.x) && Number.isFinite(targetCursorWorld.y) && Number.isFinite(targetCursorWorld.z)) {
+          cursorWorld.lerp(targetCursorWorld, 0.16);
+        }
 
         // Advance shockwave pulse
         if (shockwaveActive) {
@@ -1850,8 +1489,10 @@
         }
 
         // Parallax Lerp for subtle spatial tilt
-        targetRotX += (mouseYNorm * 0.12 - targetRotX) * 0.05;
-        targetRotY += (mouseXNorm * 0.15 - targetRotY) * 0.05;
+        if (Number.isFinite(mouseXNorm) && Number.isFinite(mouseYNorm)) {
+          targetRotX += (mouseYNorm * 0.12 - targetRotX) * 0.05;
+          targetRotY += (mouseXNorm * 0.15 - targetRotY) * 0.05;
+        }
 
         accentGroup.rotation.x = targetRotX + Math.sin(t * 0.5) * 0.08;
         accentGroup.rotation.y = targetRotY + Math.cos(t * 0.5) * 0.08;
@@ -1868,38 +1509,45 @@
 
         for (let i = 0; i < fieldCount; i++) {
           const i3 = i * 3;
-          const px = positions[i3];
-          const py = positions[i3 + 1];
-          const pz = positions[i3 + 2];
+          let px = positions[i3];
+          let py = positions[i3 + 1];
+          let pz = positions[i3 + 2];
+
+          // Sanitize positions if NaN or non-finite
+          if (!Number.isFinite(px)) { px = basePos[i3] = (Math.random() - 0.5) * 28; positions[i3] = px; velocities[i3] = 0; }
+          if (!Number.isFinite(py)) { py = basePos[i3 + 1] = (Math.random() - 0.5) * 22; positions[i3 + 1] = py; velocities[i3 + 1] = 0; }
+          if (!Number.isFinite(pz)) { pz = basePos[i3 + 2] = (Math.random() - 0.5) * 10; positions[i3 + 2] = pz; velocities[i3 + 2] = 0; }
 
           // 1. Cursor Magnetic Repulsion + Swirl
-          if (isMouseInside) {
+          if (isMouseInside && Number.isFinite(cursorWorld.x) && Number.isFinite(cursorWorld.y)) {
             const dx = px - cursorWorld.x;
             const dy = py - cursorWorld.y;
             const dz = (pz - cursorWorld.z) * 0.4;
             const dSq = dx * dx + dy * dy + dz * dz;
 
-            if (dSq < radiusSq && dSq > 0.01) {
+            if (Number.isFinite(dSq) && dSq < radiusSq && dSq > 0.04) {
               const dist = Math.sqrt(dSq);
-              const factor = (1 - dist / interactionRadius);
-              const force = factor * factor * 1.35;
+              if (dist > 0.01) {
+                const factor = (1 - dist / interactionRadius);
+                const force = factor * factor * 1.35;
 
-              const nx = dx / dist;
-              const ny = dy / dist;
+                const nx = dx / dist;
+                const ny = dy / dist;
 
-              // Direct repulsion away from cursor
-              velocities[i3] += nx * force * 1.2;
-              velocities[i3 + 1] += ny * force * 1.2;
-              velocities[i3 + 2] += (Math.random() - 0.5) * force * 0.6;
+                // Direct repulsion away from cursor
+                velocities[i3] += nx * force * 1.2;
+                velocities[i3 + 1] += ny * force * 1.2;
+                velocities[i3 + 2] += (Math.random() - 0.5) * force * 0.6;
 
-              // Tangential swirl (dynamic cosmic vortex around cursor)
-              velocities[i3] += -ny * force * 0.65;
-              velocities[i3 + 1] += nx * force * 0.65;
+                // Tangential swirl (dynamic cosmic vortex around cursor)
+                velocities[i3] += -ny * force * 0.65;
+                velocities[i3 + 1] += nx * force * 0.65;
+              }
             }
           }
 
           // 2. Click Shockwave Impulse
-          if (shockwaveActive) {
+          if (shockwaveActive && Number.isFinite(shockwaveOrigin.x) && Number.isFinite(shockwaveOrigin.y)) {
             const sdx = px - shockwaveOrigin.x;
             const sdy = py - shockwaveOrigin.y;
             const sDist = Math.sqrt(sdx * sdx + sdy * sdy);
@@ -1926,9 +1574,19 @@
           velocities[i3 + 1] *= 0.88;
           velocities[i3 + 2] *= 0.88;
 
+          // Guard velocities
+          if (!Number.isFinite(velocities[i3])) velocities[i3] = 0;
+          if (!Number.isFinite(velocities[i3 + 1])) velocities[i3 + 1] = 0;
+          if (!Number.isFinite(velocities[i3 + 2])) velocities[i3 + 2] = 0;
+
           positions[i3] += velocities[i3];
           positions[i3 + 1] += velocities[i3 + 1];
           positions[i3 + 2] += velocities[i3 + 2];
+
+          // Final clamp to ensure finite numbers
+          if (!Number.isFinite(positions[i3])) positions[i3] = basePos[i3];
+          if (!Number.isFinite(positions[i3 + 1])) positions[i3 + 1] = basePos[i3 + 1];
+          if (!Number.isFinite(positions[i3 + 2])) positions[i3 + 2] = basePos[i3 + 2];
         }
 
         posAttr.needsUpdate = true;
