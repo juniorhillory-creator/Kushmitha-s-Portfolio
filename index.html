@@ -536,22 +536,28 @@
             BSc Computer Science Undergraduate & Developer
           </p>
 
-          <!-- Coral Button & Picture Controls (Switch Photo + Background Transparency Toggle) -->
-          <div class="flex flex-wrap items-center gap-3">
-            <a href="#works" class="group flex items-center justify-between gap-3 bg-coral hover:bg-coralHover text-white px-6 py-3.5 rounded-xl font-medium text-sm md:text-base transition-all duration-300 shadow-[0_4px_25px_rgba(224,83,71,0.35)]">
+          <!-- Dual Primary CTAs: View Works + Prominent Hire Me Button (Redirects to Contact Details) -->
+          <div class="flex flex-wrap items-center gap-3.5">
+            <!-- 1. View Works Button -->
+            <a href="#works" class="group flex items-center justify-between gap-3 bg-coral hover:bg-coralHover text-white px-6 py-3.5 rounded-xl font-medium text-sm md:text-base transition-all duration-300 shadow-[0_4px_25px_rgba(224,83,71,0.35)] hover:shadow-[0_6px_30px_rgba(224,83,71,0.5)] active:scale-[0.98]">
               <span>View Works</span>
-              <span class="inline-block transform group-hover:translate-y-0.5 transition-transform">↓</span>
+              <span class="inline-block transform group-hover:translate-y-0.5 transition-transform font-bold">↓</span>
             </a>
 
-            <a href="#contact" class="flex items-center gap-2 border border-white/15 hover:border-coral/50 bg-white/5 hover:bg-white/10 text-white hover:text-coral px-5 py-3.5 rounded-xl font-medium text-sm md:text-base transition-all">
-              <span>Hire Me</span>
-              <span>→</span>
+            <!-- 2. Hire Me Button (Directly on the Right Side of View Works, Redirects to #contact-details-box) -->
+            <a href="#contact-details-box" id="hero-hire-me-btn" class="group relative flex items-center gap-3 bg-white/10 hover:bg-white/[0.18] text-white hover:text-coral border border-white/20 hover:border-coral/80 px-6 py-3.5 rounded-xl font-medium text-sm md:text-base transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.35)] hover:shadow-[0_4px_25px_rgba(224,83,71,0.3)] backdrop-blur-md active:scale-[0.98]" title="Get in touch for opportunities & collaborations">
+              <span class="relative flex h-2.5 w-2.5">
+                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+              </span>
+              <span class="font-medium tracking-wide">Hire Me</span>
+              <span class="inline-block transform group-hover:translate-x-1 transition-transform text-coral font-bold text-base">→</span>
             </a>
 
-            <!-- Subtle Image Switcher (Optional tool for testing local portrait) -->
-            <label for="portrait-file-input" class="text-xs text-slate-400 hover:text-white cursor-pointer px-3.5 py-3 rounded-xl border border-white/10 hover:border-white/25 transition-colors flex items-center gap-1.5" title="Load custom portrait photo">
+            <!-- Subtle Image Switcher (Optional tool for testing custom portrait) -->
+            <label for="portrait-file-input" class="text-xs text-slate-400 hover:text-white cursor-pointer px-3 py-3 rounded-xl border border-white/10 hover:border-white/25 bg-white/[0.02] hover:bg-white/[0.05] transition-colors flex items-center gap-1.5" title="Load custom portrait photo">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-              <span>Switch Photo</span>
+              <span class="hidden sm:inline">Photo</span>
             </label>
             <input type="file" id="portrait-file-input" accept="image/*" class="hidden">
           </div>
@@ -942,21 +948,21 @@
           Interested in discussing internship roles, full-stack projects, or creative engineering collaborations? Drop an email directly.
         </p>
 
-        <div class="space-y-4 font-mono text-sm">
+        <div id="contact-details-box" class="space-y-4 font-mono text-sm p-6 rounded-2xl bg-white/[0.03] border border-white/10 transition-all duration-700 scroll-mt-28">
           <div class="flex items-center gap-4">
-            <span class="text-slate-500 w-24">Email:</span>
-            <a href="mailto:kushmitha259@gmail.com" class="text-white hover:text-coral transition-colors underline decoration-coral">
+            <span class="text-slate-400 w-24">Email:</span>
+            <a href="mailto:kushmitha259@gmail.com" class="text-white hover:text-coral transition-colors underline decoration-coral font-medium text-base">
               kushmitha259@gmail.com
             </a>
           </div>
           <div class="flex items-center gap-4">
-            <span class="text-slate-500 w-24">Phone:</span>
-            <a href="tel:+94743289435" class="text-white hover:text-coral transition-colors">
+            <span class="text-slate-400 w-24">Phone:</span>
+            <a href="tel:+94743289435" class="text-white hover:text-coral transition-colors font-medium text-base">
               +94 74 328 9435
             </a>
           </div>
           <div class="flex items-center gap-4">
-            <span class="text-slate-500 w-24">Location:</span>
+            <span class="text-slate-400 w-24">Location:</span>
             <span class="text-slate-300">188/B, Kurukulawa, Ragama, Sri Lanka</span>
           </div>
         </div>
@@ -1109,13 +1115,25 @@
         const targetEl = document.querySelector(targetId);
         if (targetEl) {
           targetEl.scrollIntoView({ behavior: 'smooth' });
-          // Ensure target section cards and headings are immediately visible
-          const items = targetEl.querySelectorAll('h2, .minimal-card');
-          if (items.length > 0) {
-            if (typeof gsap !== 'undefined') {
-              gsap.to(items, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out', overwrite: 'auto' });
-            } else {
-              items.forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
+          // Ensure target or enclosing section cards and headings are immediately visible
+          const sectionEl = targetEl.tagName === 'SECTION' ? targetEl : targetEl.closest('section');
+          if (sectionEl) {
+            const items = sectionEl.querySelectorAll('h2, .minimal-card');
+            if (items.length > 0) {
+              if (typeof gsap !== 'undefined') {
+                gsap.to(items, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out', overwrite: 'auto' });
+              } else {
+                items.forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
+              }
+            }
+          }
+          if (targetId === '#contact' || targetId === '#contact-details-box') {
+            const contactBox = document.getElementById('contact-details-box');
+            if (contactBox) {
+              contactBox.classList.add('border-coral', 'shadow-[0_0_35px_rgba(224,83,71,0.35)]', 'bg-white/[0.07]');
+              setTimeout(() => {
+                contactBox.classList.remove('border-coral', 'shadow-[0_0_35px_rgba(224,83,71,0.35)]', 'bg-white/[0.07]');
+              }, 2200);
             }
           }
           if (typeof ScrollTrigger !== 'undefined') {
@@ -1632,95 +1650,209 @@
       dotMesh.position.set(13, 4, 2);
       accentGroup.add(dotMesh);
 
-      // Ambient Minimal Star Dust (Pure black background with subtle micro particles)
+      // Create circular soft glowing particle texture
+      function createGlowDotTexture() {
+        const pCanvas = document.createElement('canvas');
+        pCanvas.width = 64;
+        pCanvas.height = 64;
+        const pCtx = pCanvas.getContext('2d');
+        const grad = pCtx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+        grad.addColorStop(0.2, 'rgba(255, 255, 255, 0.85)');
+        grad.addColorStop(0.55, 'rgba(255, 255, 255, 0.25)');
+        grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        pCtx.fillStyle = grad;
+        pCtx.beginPath();
+        pCtx.arc(32, 32, 32, 0, Math.PI * 2);
+        pCtx.fill();
+        return new THREE.CanvasTexture(pCanvas);
+      }
+      const particleGlowTexture = createGlowDotTexture();
+
+      // 1. Deep Cosmic Star Dust (Distant background micro-points for 3D depth)
       const starCount = 350;
       const starGeo = new THREE.BufferGeometry();
       const starPos = new Float32Array(starCount * 3);
 
       for (let i = 0; i < starCount * 3; i += 3) {
-        starPos[i] = (Math.random() - 0.5) * 80;
-        starPos[i + 1] = (Math.random() - 0.5) * 80;
-        starPos[i + 2] = (Math.random() - 0.5) * 60 - 10;
+        starPos[i] = (Math.random() - 0.5) * 90;
+        starPos[i + 1] = (Math.random() - 0.5) * 70;
+        starPos[i + 2] = -15 - Math.random() * 45;
       }
       starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
 
       const starMat = new THREE.PointsMaterial({
-        size: 0.25,
-        color: 0xffffff,
+        size: 0.35,
+        map: particleGlowTexture,
         transparent: true,
-        opacity: 0.25
+        opacity: 0.35,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
       });
       const stars = new THREE.Points(starGeo, starMat);
       scene.add(stars);
 
-      // Depth Particles Behind Transparent Portrait (Shining directly through transparent background)
-      const auraCount = 200;
-      const auraGeo = new THREE.BufferGeometry();
-      const auraPos = new Float32Array(auraCount * 3);
-      const auraColors = new Float32Array(auraCount * 3);
+      // 2. Interactive Full-Window Particle Field (Spread across entire viewport & responsive to cursor)
+      const fieldCount = 600;
+      const fieldGeo = new THREE.BufferGeometry();
+      const fieldPos = new Float32Array(fieldCount * 3);
+      const fieldColors = new Float32Array(fieldCount * 3);
+      const basePos = new Float32Array(fieldCount * 3);
+      const velocities = new Float32Array(fieldCount * 3);
+      const phases = new Float32Array(fieldCount);
+      const speeds = new Float32Array(fieldCount);
 
-      for (let i = 0; i < auraCount * 3; i += 3) {
-        // Centered directly behind the portrait silhouette (x: -12 to 12, y: -6 to 12, z: -2 to -10)
-        auraPos[i] = (Math.random() - 0.5) * 24;
-        auraPos[i + 1] = (Math.random() - 0.5) * 20 + 2;
-        auraPos[i + 2] = -2 - Math.random() * 8;
+      const aspect = window.innerWidth / window.innerHeight;
+      const spanX = Math.max(aspect * 24, 28);
+      const spanY = 22;
 
-        // Warm amber / coral / cyan sparkles
-        const randChoice = Math.random();
-        if (randChoice < 0.6) {
-          // Warm Golden Amber (Matches rim lighting)
-          auraColors[i] = 0.96;
-          auraColors[i + 1] = 0.62;
-          auraColors[i + 2] = 0.04;
-        } else if (randChoice < 0.85) {
-          // Cyan Accent
-          auraColors[i] = 0.0;
-          auraColors[i + 1] = 0.82;
-          auraColors[i + 2] = 1.0;
+      for (let i = 0; i < fieldCount; i++) {
+        const i3 = i * 3;
+        let x, y, z;
+
+        // 30% clustered near hero portrait/center, 70% widely distributed edge-to-edge
+        if (i < fieldCount * 0.3) {
+          x = (Math.random() - 0.5) * 26;
+          y = (Math.random() - 0.5) * 22 + 1;
+          z = -1 - Math.random() * 10;
         } else {
-          // Coral
-          auraColors[i] = 0.88;
-          auraColors[i + 1] = 0.33;
-          auraColors[i + 2] = 0.28;
+          x = (Math.random() - 0.5) * spanX * 2;
+          y = (Math.random() - 0.5) * spanY * 2;
+          z = (Math.random() - 0.5) * 20 - 2;
+        }
+
+        fieldPos[i3] = x;
+        fieldPos[i3 + 1] = y;
+        fieldPos[i3 + 2] = z;
+
+        basePos[i3] = x;
+        basePos[i3 + 1] = y;
+        basePos[i3 + 2] = z;
+
+        velocities[i3] = 0;
+        velocities[i3 + 1] = 0;
+        velocities[i3 + 2] = 0;
+
+        phases[i] = Math.random() * Math.PI * 2;
+        speeds[i] = 0.4 + Math.random() * 0.8;
+
+        // Elegant Color Palette: Cyan, Coral, Warm Amber Gold, Ice White
+        const randChoice = Math.random();
+        if (randChoice < 0.35) {
+          // Warm Golden Amber (#f59e0b)
+          fieldColors[i3] = 0.96;
+          fieldColors[i3 + 1] = 0.62;
+          fieldColors[i3 + 2] = 0.04;
+        } else if (randChoice < 0.65) {
+          // Cyan Accent (#00d2ff)
+          fieldColors[i3] = 0.0;
+          fieldColors[i3 + 1] = 0.82;
+          fieldColors[i3 + 2] = 1.0;
+        } else if (randChoice < 0.85) {
+          // Coral (#e05347)
+          fieldColors[i3] = 0.88;
+          fieldColors[i3 + 1] = 0.33;
+          fieldColors[i3 + 2] = 0.28;
+        } else {
+          // Soft Ethereal White (#f8fafc)
+          fieldColors[i3] = 0.95;
+          fieldColors[i3 + 1] = 0.98;
+          fieldColors[i3 + 2] = 1.0;
         }
       }
-      auraGeo.setAttribute('position', new THREE.BufferAttribute(auraPos, 3));
-      auraGeo.setAttribute('color', new THREE.BufferAttribute(auraColors, 3));
 
-      const auraMat = new THREE.PointsMaterial({
-        size: 0.45,
+      fieldGeo.setAttribute('position', new THREE.BufferAttribute(fieldPos, 3));
+      fieldGeo.setAttribute('color', new THREE.BufferAttribute(fieldColors, 3));
+
+      const fieldMat = new THREE.PointsMaterial({
+        size: 0.65,
+        map: particleGlowTexture,
         vertexColors: true,
         transparent: true,
-        opacity: 0.75,
-        blending: THREE.AdditiveBlending
+        opacity: 0.8,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
       });
-      const auraParticles = new THREE.Points(auraGeo, auraMat);
-      scene.add(auraParticles);
 
-      // Mouse Parallax
+      const interactiveParticles = new THREE.Points(fieldGeo, fieldMat);
+      scene.add(interactiveParticles);
+
+      // Cursor World Space Projection & Tracking
+      const raycaster = new THREE.Raycaster();
+      const mouseNDC = new THREE.Vector2(-9999, -9999);
+      const targetCursorWorld = new THREE.Vector3(0, 0, 0);
+      const cursorWorld = new THREE.Vector3(0, 0, 0);
+      const refPlane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0);
+
       let mouseXNorm = 0, mouseYNorm = 0;
       let targetRotX = 0, targetRotY = 0;
+      let isMouseInside = false;
+
+      // Click shockwave expansion
+      let shockwaveActive = false;
+      let shockwaveRadius = 0;
+      let shockwaveOrigin = new THREE.Vector3();
 
       window.addEventListener('mousemove', (e) => {
         mouseXNorm = (e.clientX / window.innerWidth) * 2 - 1;
         mouseYNorm = -(e.clientY / window.innerHeight) * 2 + 1;
+        mouseNDC.x = mouseXNorm;
+        mouseNDC.y = mouseYNorm;
+        isMouseInside = true;
+      });
+
+      window.addEventListener('mouseleave', () => {
+        isMouseInside = false;
+      });
+
+      window.addEventListener('click', (e) => {
+        if (isMouseInside) {
+          shockwaveActive = true;
+          shockwaveRadius = 0.5;
+          shockwaveOrigin.copy(cursorWorld);
+        }
       });
 
       window.addEventListener('resize', () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
+
+        // Re-scale boundary positions slightly if aspect ratio changes significantly
+        const newAspect = window.innerWidth / window.innerHeight;
+        const newSpanX = Math.max(newAspect * 24, 28);
+        for (let i = Math.floor(fieldCount * 0.3); i < fieldCount; i++) {
+          const i3 = i * 3;
+          basePos[i3] = (Math.random() - 0.5) * newSpanX * 2;
+        }
       });
 
-      // Render Loop
-      let clock = new THREE.Clock();
+      // Render Loop with Particle Physics Simulation
+      const clock = new THREE.Clock();
+      const posAttr = fieldGeo.attributes.position;
 
       function animate() {
         const t = clock.getElapsedTime();
+        const positions = posAttr.array;
 
-        // Parallax Lerp
-        targetRotX += (mouseYNorm * 0.15 - targetRotX) * 0.05;
-        targetRotY += (mouseXNorm * 0.2 - targetRotY) * 0.05;
+        // Project cursor into 3D world space
+        if (isMouseInside) {
+          raycaster.setFromCamera(mouseNDC, camera);
+          raycaster.ray.intersectPlane(refPlane, targetCursorWorld);
+        }
+        cursorWorld.lerp(targetCursorWorld, 0.16);
+
+        // Advance shockwave pulse
+        if (shockwaveActive) {
+          shockwaveRadius += 0.8;
+          if (shockwaveRadius > 45) {
+            shockwaveActive = false;
+          }
+        }
+
+        // Parallax Lerp for subtle spatial tilt
+        targetRotX += (mouseYNorm * 0.12 - targetRotX) * 0.05;
+        targetRotY += (mouseXNorm * 0.15 - targetRotY) * 0.05;
 
         accentGroup.rotation.x = targetRotX + Math.sin(t * 0.5) * 0.08;
         accentGroup.rotation.y = targetRotY + Math.cos(t * 0.5) * 0.08;
@@ -1729,9 +1861,78 @@
         ring2.rotation.x = t * 0.2;
         dotMesh.position.y = 4 + Math.sin(t * 1.2) * 0.3;
 
-        stars.rotation.y = t * 0.01;
-        auraParticles.rotation.y = t * 0.04 + mouseXNorm * 0.08;
-        auraParticles.rotation.x = Math.sin(t * 0.6) * 0.04 - mouseYNorm * 0.08;
+        stars.rotation.y = t * 0.008;
+
+        // Interactive Particle Physics Update
+        const interactionRadius = 9.0;
+        const radiusSq = interactionRadius * interactionRadius;
+
+        for (let i = 0; i < fieldCount; i++) {
+          const i3 = i * 3;
+          const px = positions[i3];
+          const py = positions[i3 + 1];
+          const pz = positions[i3 + 2];
+
+          // 1. Cursor Magnetic Repulsion + Swirl
+          if (isMouseInside) {
+            const dx = px - cursorWorld.x;
+            const dy = py - cursorWorld.y;
+            const dz = (pz - cursorWorld.z) * 0.4;
+            const dSq = dx * dx + dy * dy + dz * dz;
+
+            if (dSq < radiusSq && dSq > 0.01) {
+              const dist = Math.sqrt(dSq);
+              const factor = (1 - dist / interactionRadius);
+              const force = factor * factor * 1.35;
+
+              const nx = dx / dist;
+              const ny = dy / dist;
+
+              // Direct repulsion away from cursor
+              velocities[i3] += nx * force * 1.2;
+              velocities[i3 + 1] += ny * force * 1.2;
+              velocities[i3 + 2] += (Math.random() - 0.5) * force * 0.6;
+
+              // Tangential swirl (dynamic cosmic vortex around cursor)
+              velocities[i3] += -ny * force * 0.65;
+              velocities[i3 + 1] += nx * force * 0.65;
+            }
+          }
+
+          // 2. Click Shockwave Impulse
+          if (shockwaveActive) {
+            const sdx = px - shockwaveOrigin.x;
+            const sdy = py - shockwaveOrigin.y;
+            const sDist = Math.sqrt(sdx * sdx + sdy * sdy);
+            const ringDist = Math.abs(sDist - shockwaveRadius);
+            if (ringDist < 4.0 && sDist > 0.1) {
+              const shockForce = (1 - ringDist / 4.0) * 0.8;
+              velocities[i3] += (sdx / sDist) * shockForce * 1.2;
+              velocities[i3 + 1] += (sdy / sDist) * shockForce * 1.2;
+            }
+          }
+
+          // 3. Natural Organic Harmonic Wave (idle breathing motion)
+          const targetX = basePos[i3] + Math.sin(t * speeds[i] + phases[i]) * 0.5;
+          const targetY = basePos[i3 + 1] + Math.cos(t * speeds[i] * 0.85 + phases[i] * 1.3) * 0.5;
+          const targetZ = basePos[i3 + 2] + Math.sin(t * 0.6 + phases[i]) * 0.35;
+
+          // 4. Spring Return to Home Position
+          velocities[i3] += (targetX - px) * 0.042;
+          velocities[i3 + 1] += (targetY - py) * 0.042;
+          velocities[i3 + 2] += (targetZ - pz) * 0.042;
+
+          // 5. Viscous Damping
+          velocities[i3] *= 0.88;
+          velocities[i3 + 1] *= 0.88;
+          velocities[i3 + 2] *= 0.88;
+
+          positions[i3] += velocities[i3];
+          positions[i3 + 1] += velocities[i3 + 1];
+          positions[i3 + 2] += velocities[i3 + 2];
+        }
+
+        posAttr.needsUpdate = true;
 
         renderer.render(scene, camera);
         requestAnimationFrame(animate);
