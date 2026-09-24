@@ -62,6 +62,8 @@
       color: #ffffff;
       font-family: 'Plus Jakarta Sans', sans-serif;
       overflow-x: hidden;
+      selection-background-color: #e05347;
+      selection-color: #ffffff;
     }
 
     ::selection {
@@ -536,28 +538,22 @@
             BSc Computer Science Undergraduate & Developer
           </p>
 
-          <!-- Dual Primary CTAs: View Works + Prominent Hire Me Button (Redirects to Contact Details) -->
-          <div class="flex flex-wrap items-center gap-3.5">
-            <!-- 1. View Works Button -->
-            <a href="#works" class="group flex items-center justify-between gap-3 bg-coral hover:bg-coralHover text-white px-6 py-3.5 rounded-xl font-medium text-sm md:text-base transition-all duration-300 shadow-[0_4px_25px_rgba(224,83,71,0.35)] hover:shadow-[0_6px_30px_rgba(224,83,71,0.5)] active:scale-[0.98]">
+          <!-- Coral Button & Picture Controls (Switch Photo + Background Transparency Toggle) -->
+          <div class="flex flex-wrap items-center gap-3">
+            <a href="#works" class="group flex items-center justify-between gap-3 bg-coral hover:bg-coralHover text-white px-6 py-3.5 rounded-xl font-medium text-sm md:text-base transition-all duration-300 shadow-[0_4px_25px_rgba(224,83,71,0.35)]">
               <span>View Works</span>
-              <span class="inline-block transform group-hover:translate-y-0.5 transition-transform font-bold">↓</span>
+              <span class="inline-block transform group-hover:translate-y-0.5 transition-transform">↓</span>
             </a>
 
-            <!-- 2. Hire Me Button (Directly on the Right Side of View Works, Redirects to #contact-details-box) -->
-            <a href="#contact-details-box" id="hero-hire-me-btn" class="group relative flex items-center gap-3 bg-white/10 hover:bg-white/[0.18] text-white hover:text-coral border border-white/20 hover:border-coral/80 px-6 py-3.5 rounded-xl font-medium text-sm md:text-base transition-all duration-300 shadow-[0_4px_20px_rgba(0,0,0,0.35)] hover:shadow-[0_4px_25px_rgba(224,83,71,0.3)] backdrop-blur-md active:scale-[0.98]" title="Get in touch for opportunities & collaborations">
-              <span class="relative flex h-2.5 w-2.5">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-              </span>
-              <span class="font-medium tracking-wide">Hire Me</span>
-              <span class="inline-block transform group-hover:translate-x-1 transition-transform text-coral font-bold text-base">→</span>
+            <a href="#contact" class="flex items-center gap-2 border border-white/15 hover:border-coral/50 bg-white/5 hover:bg-white/10 text-white hover:text-coral px-5 py-3.5 rounded-xl font-medium text-sm md:text-base transition-all">
+              <span>Hire Me</span>
+              <span>→</span>
             </a>
 
-            <!-- Subtle Image Switcher (Optional tool for testing custom portrait) -->
-            <label for="portrait-file-input" class="text-xs text-slate-400 hover:text-white cursor-pointer px-3 py-3 rounded-xl border border-white/10 hover:border-white/25 bg-white/[0.02] hover:bg-white/[0.05] transition-colors flex items-center gap-1.5" title="Load custom portrait photo">
+            <!-- Subtle Image Switcher (Optional tool for testing local portrait) -->
+            <label for="portrait-file-input" class="text-xs text-slate-400 hover:text-white cursor-pointer px-3.5 py-3 rounded-xl border border-white/10 hover:border-white/25 transition-colors flex items-center gap-1.5" title="Load custom portrait photo">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-              <span class="hidden sm:inline">Photo</span>
+              <span>Switch Photo</span>
             </label>
             <input type="file" id="portrait-file-input" accept="image/*" class="hidden">
           </div>
@@ -948,21 +944,21 @@
           Interested in discussing internship roles, full-stack projects, or creative engineering collaborations? Drop an email directly.
         </p>
 
-        <div id="contact-details-box" class="space-y-4 font-mono text-sm p-6 rounded-2xl bg-white/[0.03] border border-white/10 transition-all duration-700 scroll-mt-28">
+        <div class="space-y-4 font-mono text-sm">
           <div class="flex items-center gap-4">
-            <span class="text-slate-400 w-24">Email:</span>
-            <a href="mailto:kushmitha259@gmail.com" class="text-white hover:text-coral transition-colors underline decoration-coral font-medium text-base">
+            <span class="text-slate-500 w-24">Email:</span>
+            <a href="mailto:kushmitha259@gmail.com" class="text-white hover:text-coral transition-colors underline decoration-coral">
               kushmitha259@gmail.com
             </a>
           </div>
           <div class="flex items-center gap-4">
-            <span class="text-slate-400 w-24">Phone:</span>
-            <a href="tel:+94743289435" class="text-white hover:text-coral transition-colors font-medium text-base">
+            <span class="text-slate-500 w-24">Phone:</span>
+            <a href="tel:+94743289435" class="text-white hover:text-coral transition-colors">
               +94 74 328 9435
             </a>
           </div>
           <div class="flex items-center gap-4">
-            <span class="text-slate-400 w-24">Location:</span>
+            <span class="text-slate-500 w-24">Location:</span>
             <span class="text-slate-300">188/B, Kurukulawa, Ragama, Sri Lanka</span>
           </div>
         </div>
@@ -1115,25 +1111,13 @@
         const targetEl = document.querySelector(targetId);
         if (targetEl) {
           targetEl.scrollIntoView({ behavior: 'smooth' });
-          // Ensure target or enclosing section cards and headings are immediately visible
-          const sectionEl = targetEl.tagName === 'SECTION' ? targetEl : targetEl.closest('section');
-          if (sectionEl) {
-            const items = sectionEl.querySelectorAll('h2, .minimal-card');
-            if (items.length > 0) {
-              if (typeof gsap !== 'undefined') {
-                gsap.to(items, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out', overwrite: 'auto' });
-              } else {
-                items.forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
-              }
-            }
-          }
-          if (targetId === '#contact' || targetId === '#contact-details-box') {
-            const contactBox = document.getElementById('contact-details-box');
-            if (contactBox) {
-              contactBox.classList.add('border-coral', 'shadow-[0_0_35px_rgba(224,83,71,0.35)]', 'bg-white/[0.07]');
-              setTimeout(() => {
-                contactBox.classList.remove('border-coral', 'shadow-[0_0_35px_rgba(224,83,71,0.35)]', 'bg-white/[0.07]');
-              }, 2200);
+          // Ensure target section cards and headings are immediately visible
+          const items = targetEl.querySelectorAll('h2, .minimal-card');
+          if (items.length > 0) {
+            if (typeof gsap !== 'undefined') {
+              gsap.to(items, { y: 0, opacity: 1, duration: 0.5, stagger: 0.08, ease: 'power2.out', overwrite: 'auto' });
+            } else {
+              items.forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
             }
           }
           if (typeof ScrollTrigger !== 'undefined') {
